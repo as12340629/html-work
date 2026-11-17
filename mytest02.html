@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRECTOR ARCHIVE — DAYLIGHT EDITORIAL & FILM PORTFOLIO</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter & JetBrains Mono(타임코드용) 폰트 로드 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        cinemaRed: '#D91A2A',
+                        galleryWhite: '#FFFFFF',
+                        galleryOffWhite: '#F7F7F5',
+                        inkBlack: '#111111',
+                        hairline: '#E5E5E3',
+                        mutedText: '#6B6B68',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* 밝은 데이라이트 에디토리얼 갤러리 테마 및 스크롤바 커스텀 */
+        :root {
+            --bg-pure: #FFFFFF;
+            --bg-offwhite: #F7F7F5;
+            --text-primary: #111111;
+            --text-muted: #6B6B68;
+            --hairline: #E5E5E3;
+            --accent-red: #D91A2A;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            background-color: var(--bg-pure);
+            color: var(--text-primary);
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-pure);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* 미세한 웜 필름 그레인 질감 오버레이 (밝은 배경용 멀티플라이 블렌드) */
+        .film-grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 40;
+            opacity: 0.028;
+            mix-blend-mode: multiply;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* 프로젝트 카드 호버 애니메이션 및 데이라이트 에디토리얼 줌 */
+        .project-card {
+            position: relative;
+            overflow: hidden;
+            background-color: #F7F7F5;
+            aspect-ratio: 16 / 9;
+            cursor: pointer;
+        }
+
+        .project-card .thumb-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+            filter: contrast(1.03) brightness(1.0);
+        }
+
+        .project-card:hover .thumb-media {
+            transform: scale(1.045);
+            filter: contrast(1.06) brightness(0.95);
+        }
+
+        .project-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to top,
+                rgba(255, 255, 255, 0.94) 0%,
+                rgba(255, 255, 255, 0.35) 55%,
+                rgba(255, 255, 255, 0.15) 100%
+            );
+            opacity: 0.92;
+            transition: opacity 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.25rem;
+        }
+
+        @media (min-width: 768px) {
+            .project-overlay {
+                opacity: 0;
+                padding: 1.75rem;
+            }
+            .project-card:hover .project-overlay {
+                opacity: 1;
+            }
+        }
+
+        .project-title-slide {
+            transform: translateY(8px);
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-card:hover .project-title-slide {
+            transform: translateY(0);
+        }
+
+        /* 네비게이션 언더라인 트랜지션 (잉크 블랙 액센트) */
+        .nav-link {
+            position: relative;
+            letter-spacing: 0.16em;
+            transition: color 0.25s ease, opacity 0.25s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0%;
+            height: 1.5px;
+            background-color: #111111;
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-link.active::after,
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* 커스텀 스크롤바 (라이트 갤러리 톤) */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFFFFF;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4D4D0;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #111111;
+        }
+
+        /* 모달 페이드 애니메이션 */
+        .modal-backdrop {
+            transition: opacity 0.35s ease;
+        }
+        .modal-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-white text-inkBlack font-sans selection:bg-inkBlack selection:text-white">
+
+    <!-- 시네마 필름 그레인 질감 레이어 -->
+    <div class="film-grain"></div>
+
+    <!-- =====================================================================
+         1. FIXED MINIMALIST FROSTED GLASS NAVIGATION HEADER (DAYLIGHT)
+    ====================================================================== -->
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-30 transition-all duration-300 bg-white/[0.88] backdrop-blur-md border-b border-hairline">
+        <div class="w-full px-4 sm:px-8 py-4 sm:py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <!-- 좌측: 감독 / 프로덕션 워드마크 (클릭 시 최상단 및 전체 보기) -->
+            <div class="flex items-center justify-between">
+                <a href="#" onclick="filterProjects('ALL', event)" class="text-base sm:text-lg md:text-xl font-extrabold tracking-[0.28em] uppercase text-inkBlack hover:text-neutral-600 transition-colors">
+                    MINSUNG KIM <span class="text-xs font-normal tracking-[0.2em] text-mutedText ml-1 hidden sm:inline">// ARCHIVE</span>
+                </a>
+                <!-- 모바일 카테고리 카운트 표시 -->
+                <span id="mobile-count" class="md:hidden font-mono text-[11px] text-mutedText tracking-widest">[ 09 WORKS ]</span>
+            </div>
+
+            <!-- 우측: 카테고리 필터 및 섹션 내비게이션 -->
+            <nav aria-label="Primary Navigation" class="flex flex-wrap items-center gap-4 sm:gap-7 text-[11px] sm:text-xs font-semibold uppercase">
+                <button onclick="filterProjects('ALL')" data-filter="ALL" class="nav-link active text-inkBlack cursor-pointer py-1">
+                    ALL
+                </button>
+                <button onclick="filterProjects('MUSIC VIDEOS')" data-filter="MUSIC VIDEOS" class="nav-link text-mutedText hover:text-inkBlack cursor-pointer py-1">
+                    MUSIC VIDEOS
+                </button>
+                <button onclick="filterProjects('COMMERCIALS')" data-filter="COMMERCIALS" class="nav-link text-mutedText hover:text-inkBlack cursor-pointer py-1">
+                    COMMERCIALS
+                </button>
+                <button onclick="filterProjects('FILMS')" data-filter="FILMS" class="nav-link text-mutedText hover:text-inkBlack cursor-pointer py-1">
+                    FILMS
+                </button>
+                <span class="text-hairline hidden sm:inline">|</span>
+                <button onclick="toggleInfoDrawer(true)" class="nav-link text-mutedText hover:text-cinemaRed cursor-pointer py-1">
+                    INFO / CONTACT
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- =====================================================================
+         2. FULL-BLEED DAYLIGHT HERO SHOWCASE (FEATURED REEL)
+    ====================================================================== -->
+    <section class="relative w-full h-[78vh] sm:h-[88vh] min-h-[480px] bg-galleryOffWhite overflow-hidden border-b border-hairline">
+        <!-- 실시간 데이라이트 프리즘 & 샴페인 라이트 리크 캔버스 -->
+        <canvas id="hero-canvas" class="absolute inset-0 w-full h-full object-cover"></canvas>
+
+        <!-- 밝은 갤러리 화이트 비네팅 & 에디토리얼 가독성 그라데이션 -->
+        <div class="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-white/40 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-white/75 via-transparent to-white/30 pointer-events-none"></div>
+
+        <!-- 상단 우측 아나모픽 메타데이터 -->
+        <div class="hidden sm:flex items-center gap-3 absolute top-24 right-8 font-mono text-[11px] tracking-[0.2em] text-mutedText uppercase">
+            <span class="inline-block w-2 h-2 rounded-full bg-cinemaRed animate-pulse"></span>
+            <span>FEATURED DIRECTOR'S CUT // 2.39:1 DAYLIGHT MASTER</span>
+        </div>
+
+        <!-- 하단 좌측 피처드 작품 타이틀 & 재생 트리거 -->
+        <div class="absolute bottom-8 sm:bottom-14 left-4 sm:left-8 right-4 sm:right-8 flex flex-col md:flex-row md:items-end justify-between gap-6 z-10">
+            <div class="max-w-3xl">
+                <p class="font-mono text-[11px] sm:text-xs tracking-[0.25em] text-cinemaRed font-semibold uppercase mb-2">
+                    FEATURED REEL — MUSIC VIDEO / 2026
+                </p>
+                <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-[0.08em] uppercase leading-[1.05] text-inkBlack">
+                    SOLARIS REQUIEM
+                </h1>
+                <p class="mt-2 text-xs sm:text-sm tracking-[0.2em] uppercase text-neutral-700 font-medium">
+                    ARTIST: ECLIPSE SYNDICATE <span class="text-neutral-400 mx-2">/</span> DIR. JOSEPH KAHN
+                </p>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button onclick="openTheaterModal(0)" class="group inline-flex items-center gap-3 px-6 py-3.5 bg-inkBlack text-white hover:bg-cinemaRed hover:text-white transition-all duration-300 text-xs font-bold tracking-[0.22em] uppercase rounded-sm shadow-sm cursor-pointer">
+                    <svg class="w-3.5 h-3.5 fill-current transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    <span>[ PLAY REEL ]</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         3. FILTER STATUS BAR (MINIMAL METADATA STRIP)
+    ====================================================================== -->
+    <div class="w-full bg-white px-4 sm:px-8 py-3.5 border-b border-hairline flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono tracking-[0.2em] text-mutedText uppercase">
+        <div class="flex items-center gap-3">
+            <span>SELECTED WORKS:</span>
+            <span id="current-category-label" class="text-inkBlack font-semibold">ALL ARCHIVE</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <span id="project-counter">SHOWING 09 OF 09 FILMS</span>
+            <span class="hidden md:inline text-hairline">|</span>
+            <span class="hidden md:inline">CLICK ANY FRAME TO SCREEN</span>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         4. CORE WIDESCREEN PROJECT GRID (조셉 칸 시그니처 3열 타이트 갤러리 그리드)
+    ====================================================================== -->
+    <main id="work-grid-section" class="w-full bg-white py-[3px] px-[3px]">
+        <!-- 3px의 정교한 화이트/헤어라인 거터(Gutter)로 밝은 갤러리 프레임들이 화면을 꽉 채우도록 설계 -->
+        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[3px] bg-white">
+            <!-- JavaScript로 9개의 프로젝트 카드가 동적 렌더링됩니다 -->
+        </div>
+    </main>
+
+    <!-- =====================================================================
+         5. MINIMALIST FOOTER & QUICK REPRESENTATION STRIP (DAYLIGHT GALLERY)
+    ====================================================================== -->
+    <footer class="w-full bg-galleryOffWhite border-t border-hairline px-4 sm:px-8 py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
+            <div>
+                <div class="text-sm sm:text-base font-extrabold tracking-[0.28em] uppercase text-inkBlack mb-2">
+                    JOSEPH KAHN // DIRECTOR ARCHIVE
+                </div>
+                <p class="text-xs text-mutedText tracking-[0.15em] uppercase">
+                    LOS ANGELES &bull; SEOUL &bull; LONDON
+                </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-6 text-xs tracking-[0.18em] font-medium uppercase text-neutral-600">
+                <button onclick="toggleInfoDrawer(true)" class="hover:text-inkBlack transition-colors cursor-pointer">
+                    REPRESENTATION &amp; BIO
+                </button>
+                <button onclick="copyContactEmail()" class="hover:text-cinemaRed transition-colors cursor-pointer">
+                    MANAGEMENT@DIRECTORARCHIVE.COM
+                </button>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-8 pt-6 border-t border-hairline flex flex-col sm:flex-row justify-between items-center gap-2 text-[10px] font-mono tracking-[0.2em] text-mutedText uppercase">
+            <span>&copy; 2026 ALL RIGHTS RESERVED.</span>
+            <span>CURATED FOR DAYLIGHT EDITORIAL WIDESCREEN DISPLAY</span>
+        </div>
+    </footer>
+
+    <!-- =====================================================================
+         6. FULLSCREEN BRIGHT GALLERY LIGHTBOX / VIDEO PLAYER MODAL
+    ====================================================================== -->
+    <div id="theater-modal" class="modal-backdrop modal-hidden fixed inset-0 z-50 bg-white/[0.98] backdrop-blur-lg flex flex-col justify-between p-4 sm:p-8 overflow-y-auto" role="dialog" aria-modal="true">
+        
+        <!-- 모달 상단 헤더: 프로젝트 카테고리 & 닫기 버튼 -->
+        <div class="w-full max-w-6xl mx-auto flex items-center justify-between pb-4 border-b border-hairline">
+            <div class="flex items-center gap-3 font-mono text-xs tracking-[0.2em] uppercase">
+                <span id="modal-category" class="text-cinemaRed font-semibold">MUSIC VIDEO</span>
+                <span class="text-hairline">//</span>
+                <span id="modal-year" class="text-mutedText">2026</span>
+            </div>
+            <button onclick="closeTheaterModal()" class="text-xs font-mono tracking-[0.22em] uppercase text-inkBlack hover:text-cinemaRed transition-colors py-1.5 px-3 border border-hairline hover:border-cinemaRed bg-galleryOffWhite rounded-sm cursor-pointer">
+                [ CLOSE / ESC ]
+            </button>
+        </div>
+
+        <!-- 모달 중앙: 16:9 와이드스크린 데이라이트 플레이어 + 컨트롤러 -->
+        <div class="w-full max-w-6xl mx-auto my-auto py-4">
+            <div class="relative w-full aspect-video bg-galleryOffWhite border border-hairline overflow-hidden shadow-xl group">
+                <!-- 밝은 주광 프리즘 & 필름 리크 렌더링 캔버스 -->
+                <canvas id="player-canvas" class="w-full h-full block cursor-pointer" onclick="togglePlayState()"></canvas>
+
+                <!-- 중앙 일시정지 오버레이 아이콘 -->
+                <div id="player-pause-badge" class="hidden absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-[2px] pointer-events-none">
+                    <div class="px-5 py-2.5 border border-inkBlack bg-white/95 font-mono text-xs font-semibold tracking-[0.25em] uppercase text-inkBlack shadow-sm">
+                        PAUSED
+                    </div>
+                </div>
+
+                <!-- 하단 시네마 플레이어 컨트롤 바 (라이트 글래스 HUD) -->
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white/95 to-transparent px-4 sm:px-6 pt-8 pb-4 flex flex-col gap-3">
+                    <!-- 타임라인 스크러버 -->
+                    <div id="timeline-track" onclick="scrubTimeline(event)" class="w-full h-1.5 bg-neutral-200 hover:h-2 transition-all cursor-pointer relative overflow-hidden">
+                        <div id="timeline-progress" class="h-full bg-cinemaRed w-0 transition-none"></div>
+                    </div>
+
+                    <!-- 재생/정지, 타임코드, 사운드 토글 -->
+                    <div class="flex items-center justify-between font-mono text-[11px] sm:text-xs tracking-[0.15em]">
+                        <div class="flex items-center gap-4">
+                            <button id="play-toggle-btn" onclick="togglePlayState()" class="text-inkBlack hover:text-cinemaRed uppercase font-bold cursor-pointer">
+                                [ PAUSE ]
+                            </button>
+                            <span id="timecode-display" class="text-inkBlack font-medium">00:00:00:00</span>
+                            <span class="text-neutral-400 hidden sm:inline">/</span>
+                            <span id="duration-display" class="text-mutedText hidden sm:inline">00:03:42:00</span>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <span class="hidden md:inline text-mutedText">24FPS &bull; 4K DAYLIGHT MASTER</span>
+                            <button id="mute-toggle-btn" onclick="toggleMuteState()" class="text-inkBlack hover:text-cinemaRed font-medium uppercase cursor-pointer">
+                                AUDIO: ON
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 작품 타이틀 및 상세 프로덕션 크레딧 -->
+            <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <div class="lg:col-span-6">
+                    <div id="modal-client" class="text-xs font-mono tracking-[0.22em] text-mutedText uppercase mb-1">
+                        ARTIST / CLIENT
+                    </div>
+                    <h2 id="modal-title" class="text-2xl sm:text-3xl font-extrabold tracking-[0.08em] uppercase text-inkBlack">
+                        PROJECT TITLE
+                    </h2>
+                    <p id="modal-synopsis" class="mt-3 text-xs sm:text-sm text-neutral-600 leading-relaxed max-w-xl">
+                        High-fashion daylight visual study exploring kinetic choreography, prismatic lens refractions, and rapid montage editing.
+                    </p>
+                </div>
+
+                <!-- 크레딧 테이블 -->
+                <div class="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2 lg:pt-0 border-t lg:border-t-0 lg:border-l border-hairline lg:pl-8 text-xs">
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.2em] text-mutedText uppercase">DIRECTOR</span>
+                        <span id="credit-director" class="block mt-1 font-semibold text-inkBlack uppercase tracking-wider">JOSEPH KAHN</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.2em] text-mutedText uppercase">CINEMATOGRAPHY</span>
+                        <span id="credit-dp" class="block mt-1 font-semibold text-inkBlack uppercase tracking-wider">CHRISTOPHER PROBST</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.2em] text-mutedText uppercase">PRODUCTION</span>
+                        <span id="credit-prod" class="block mt-1 font-semibold text-inkBlack uppercase tracking-wider">SUPERMEGA</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.2em] text-mutedText uppercase">FORMAT</span>
+                        <span id="credit-format" class="block mt-1 font-medium text-neutral-700 uppercase tracking-wider">ARRI ALEXA 65</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.2em] text-mutedText uppercase">RUNTIME</span>
+                        <span id="credit-runtime" class="block mt-1 font-medium text-neutral-700 uppercase tracking-wider">03:42</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 모달 하단: 이전 / 다음 작품 내비게이션 -->
+        <div class="w-full max-w-6xl mx-auto pt-4 border-t border-hairline flex items-center justify-between text-xs font-mono tracking-[0.2em] uppercase">
+            <button onclick="navigateProject(-1)" class="text-mutedText hover:text-inkBlack font-semibold transition-colors py-2 cursor-pointer">
+                &larr; PREV WORK
+            </button>
+            <span id="modal-index-indicator" class="text-mutedText">01 / 09</span>
+            <button onclick="navigateProject(1)" class="text-mutedText hover:text-inkBlack font-semibold transition-colors py-2 cursor-pointer">
+                NEXT WORK &rarr;
+            </button>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         7. MINIMALIST INFO / REPRESENTATION OVERLAY DRAWER (DAYLIGHT)
+    ====================================================================== -->
+    <div id="info-drawer" class="modal-backdrop modal-hidden fixed inset-0 z-50 bg-white/[0.98] backdrop-blur-lg overflow-y-auto p-4 sm:p-10" role="dialog" aria-modal="true">
+        <div class="max-w-5xl mx-auto min-h-full flex flex-col justify-between">
+            <!-- 상단 닫기 바 -->
+            <div class="flex items-center justify-between pb-6 border-b border-hairline">
+                <span class="text-sm font-extrabold tracking-[0.28em] uppercase text-inkBlack">
+                    INFO // REPRESENTATION
+                </span>
+                <button onclick="toggleInfoDrawer(false)" class="text-xs font-mono tracking-[0.22em] uppercase text-inkBlack hover:text-cinemaRed transition-colors py-1.5 px-3 border border-hairline hover:border-cinemaRed bg-galleryOffWhite rounded-sm cursor-pointer">
+                    [ CLOSE ]
+                </button>
+            </div>
+
+            <!-- 본문 바이오 및 에이전시 정보 -->
+            <div class="my-12 grid grid-cols-1 md:grid-cols-12 gap-10">
+                <div class="md:col-span-7 space-y-6">
+                    <h2 class="text-2xl sm:text-4xl font-extrabold tracking-[0.06em] uppercase leading-tight text-inkBlack">
+                        VISUAL STORYTELLING AT KINETIC VELOCITY.
+                    </h2>
+                    <p class="text-sm sm:text-base text-neutral-700 leading-relaxed font-normal">
+                        선명한 자연광의 대비, 정밀한 카메라 무브먼트, 그리고 감각적인 편집 리듬으로 글로벌 뮤직비디오와 하이엔드 패션·커머셜, 장편 영화를 넘나드는 디렉터 포트폴리오 아카이브입니다.
+                    </p>
+                    <p class="text-xs sm:text-sm text-mutedText leading-relaxed">
+                        Awarded multiple Grammy Awards, MTV Video Music Awards, Cannes Lions, and Clio Awards for excellence in direction, visual effects, and cinematography.
+                    </p>
+
+                    <!-- 원클릭 이메일 복사 버튼 -->
+                    <div class="pt-4">
+                        <span class="block font-mono text-[10px] tracking-[0.22em] text-mutedText uppercase mb-2">DIRECT INQUIRIES &amp; SCRIPTS</span>
+                        <button onclick="copyContactEmail()" class="inline-flex items-center gap-3 px-5 py-3 bg-galleryOffWhite border border-hairline hover:border-inkBlack text-xs sm:text-sm font-mono tracking-[0.15em] text-inkBlack transition-colors rounded-sm cursor-pointer">
+                            <span>MANAGEMENT@DIRECTORARCHIVE.COM</span>
+                            <span class="text-[10px] text-cinemaRed font-semibold uppercase">[ COPY ]</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 지역별 에이전시 (US / ASIA / EUROPE) -->
+                <div class="md:col-span-5 space-y-8 border-t md:border-t-0 md:border-l border-hairline pt-8 md:pt-0 md:pl-10">
+                    <div>
+                        <h3 class="font-mono text-xs tracking-[0.22em] text-cinemaRed font-semibold uppercase mb-2">NORTH AMERICA</h3>
+                        <p class="text-sm font-bold tracking-wider uppercase text-inkBlack">SUPERMEGA PRODUCTIONS</p>
+                        <p class="text-xs text-mutedText mt-1">Los Angeles, CA &bull; +1 (310) 555-0194</p>
+                    </div>
+
+                    <div>
+                        <h3 class="font-mono text-xs tracking-[0.22em] text-cinemaRed font-semibold uppercase mb-2">ASIA / KOREA</h3>
+                        <p class="text-sm font-bold tracking-wider uppercase text-inkBlack">SEOUL VISUAL COLLECTIVE</p>
+                        <p class="text-xs text-mutedText mt-1">Gangnam-gu, Seoul &bull; +82 (2) 555-0182</p>
+                    </div>
+
+                    <div>
+                        <h3 class="font-mono text-xs tracking-[0.22em] text-cinemaRed font-semibold uppercase mb-2">EUROPE / UK</h3>
+                        <p class="text-sm font-bold tracking-wider uppercase text-inkBlack">NOCTURNE FILMS LONDON</p>
+                        <p class="text-xs text-mutedText mt-1">Soho, London &bull; +44 20 7946 0921</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 하단 크레딧 -->
+            <div class="pt-6 border-t border-hairline flex justify-between items-center font-mono text-[11px] text-mutedText uppercase tracking-[0.2em]">
+                <span>PRESS KIT AVAILABLE UPON REQUEST</span>
+                <span>2026 ARCHIVE</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 커스텀 토스트 메시지 박스 (alert 대신 사용) -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 bg-inkBlack text-white px-5 py-3 text-xs font-mono font-semibold tracking-[0.18em] uppercase shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        EMAIL COPIED TO CLIPBOARD
+    </div>
+
+    <!-- =====================================================================
+         JAVASCRIPT: 데이터 구조, 그리드 렌더링, 데이라이트 프리즘 캔버스 & 플레이어 로직
+    ====================================================================== -->
+    <script>
+        /**
+         * [커스터마이징 가이드]
+         * 밝은 데이라이트 에디토리얼 갤러리 톤에 맞춘 9개 대표 작품 아카이브입니다.
+         * 아래 PROJECTS 배열의 데이터(title, client, category, year, palette 등)를 수정하면
+         * 포트폴리오 그리드와 상세 플레이어 모달에 즉시 반영됩니다.
+         */
+        const PROJECTS = [
+            {
+                id: 1,
+                title: "SOLARIS REQUIEM",
+                client: "ECLIPSE SYNDICATE",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "03:42",
+                seconds: 222,
+                director: "JOSEPH KAHN",
+                dp: "CHRISTOPHER PROBST",
+                production: "SUPERMEGA",
+                format: "ARRI ALEXA 65 // DAYLIGHT ANAMORPHIC",
+                synopsis: "눈부신 백색 건축물과 자연광 프리즘 굴절 아래 펼쳐지는 역동적인 퍼포먼스를 초고속 카메라와 아나모픽 렌즈로 포착한 하이패션 뮤직비디오.",
+                accentColor: "#D91A2A",
+                baseTone: "#F5F2EB",
+                secondaryTone: "#E4DFD5",
+                visualStyle: "prism_leak"
+            },
+            {
+                id: 2,
+                title: "AERO WHITE // 01",
+                client: "PORSCHE DESIGN",
+                category: "COMMERCIALS",
+                year: "2026",
+                duration: "01:30",
+                seconds: 90,
+                director: "JOSEPH KAHN",
+                dp: "MATTHEW LIBATIQUE",
+                production: "SUPERMEGA COMMERCIAL",
+                format: "RED V-RAPTOR XL 8K",
+                synopsis: "알프스 설원과 순백의 윈드 터널을 가로지르는 전기 콘셉트카의 유려한 차체 라인과 공기역학을 미니멀한 주광 스튜디오 톤으로 담아낸 캠페인.",
+                accentColor: "#2563EB",
+                baseTone: "#F1F5F9",
+                secondaryTone: "#E2E8F0",
+                visualStyle: "daylight_lines"
+            },
+            {
+                id: 3,
+                title: "WHITE NOISE // DIRECTOR'S CUT",
+                client: "A24 / STUDIO",
+                category: "FILMS",
+                year: "2025",
+                duration: "02:15",
+                seconds: 135,
+                director: "JOSEPH KAHN",
+                dp: "JASPER WOLF",
+                production: "HARDCORE FILMS",
+                format: "35MM KODAK VISION3 50D",
+                synopsis: "현대 미술 갤러리와 유리 마천루를 배경으로 펼쳐지는 예술가들의 치열한 심리전을 날카로운 편집과 투명한 자연광으로 해부한 장편 영화.",
+                accentColor: "#D97706",
+                baseTone: "#FAF6F0",
+                secondaryTone: "#EDE6D8",
+                visualStyle: "architectural_grid"
+            },
+            {
+                id: 4,
+                title: "PRISM HEARTBEAT",
+                client: "VANGUARD K-POP",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "03:18",
+                seconds: 198,
+                director: "JOSEPH KAHN",
+                dp: "HOYTE VAN HOYTEMA",
+                production: "SEOUL VISUAL COLLECTIVE",
+                format: "ARRI ALEXA MINI LF",
+                synopsis: "거대한 거울 파빌리온과 샴페인 골드 햇살 속에서 펼쳐지는 12인조 군무를 원테이크 스테디캠 무브먼트로 완성한 에디토리얼 뮤직비디오.",
+                accentColor: "#DB2777",
+                baseTone: "#FDF2F5",
+                secondaryTone: "#F5E1E8",
+                visualStyle: "prism_leak"
+            },
+            {
+                id: 5,
+                title: "PURE MOTION",
+                client: "NIKE LAB",
+                category: "COMMERCIALS",
+                year: "2025",
+                duration: "01:00",
+                seconds: 60,
+                director: "JOSEPH KAHN",
+                dp: "BRADFORD YOUNG",
+                production: "SUPERMEGA",
+                format: "16MM & DIGITAL HYBRID",
+                synopsis: "이른 아침 여명이 밝아오는 콘크리트 스타디움에서 육상 선수들의 폭발적인 도약과 근육의 움직임을 고해상도 슬로우 모션으로 기록한 필름.",
+                accentColor: "#111111",
+                baseTone: "#F5F5F4",
+                secondaryTone: "#E7E5E4",
+                visualStyle: "daylight_lines"
+            },
+            {
+                id: 6,
+                title: "IVORY PALACE",
+                client: "REPUBLIC RECORDS",
+                category: "MUSIC VIDEOS",
+                year: "2025",
+                duration: "04:32",
+                seconds: 272,
+                director: "JOSEPH KAHN",
+                dp: "CHRISTOPHER PROBST",
+                production: "SUPERMEGA",
+                format: "PANAVISION MILLENNIUM DXL2",
+                synopsis: "고전 대리석 대저택의 정교한 대칭 미장센과 눈부신 정오의 햇살 아래 벌어지는 드라마틱한 서사를 유려한 크레인 워킹으로 그려낸 대표작.",
+                accentColor: "#7C3AED",
+                baseTone: "#F5F3FF",
+                secondaryTone: "#E9E5F8",
+                visualStyle: "architectural_grid"
+            },
+            {
+                id: 7,
+                title: "HORIZON GLASS",
+                client: "APPLE ARCHITECTURAL",
+                category: "COMMERCIALS",
+                year: "2025",
+                duration: "02:00",
+                seconds: 120,
+                director: "JOSEPH KAHN",
+                dp: "DARIUS KHONDJI",
+                production: "NOCTURNE FILMS",
+                format: "IMAX DIGITAL",
+                synopsis: "빛이 투과하는 글래스 파사드와 미니멀한 공간 디자인의 조화를 실사 트래킹과 정밀한 매치컷으로 연결한 글로벌 브랜드 필름.",
+                accentColor: "#0284C7",
+                baseTone: "#F0F9FF",
+                secondaryTone: "#E0F2FE",
+                visualStyle: "prism_leak"
+            },
+            {
+                id: 8,
+                title: "DAYLIGHT SYNDROME",
+                client: "SONY PICTURES",
+                category: "FILMS",
+                year: "2024",
+                duration: "02:45",
+                seconds: 165,
+                director: "JOSEPH KAHN",
+                dp: "CHRISTOPHER PROBST",
+                production: "DAYLIGHT FILMS",
+                format: "RED ONE MX // 50D",
+                synopsis: "캘리포니아의 강렬한 백야와 하이틴 서브컬처를 초당 수십 프레임의 감각적인 몽타주로 충돌시킨 스타일리시 장편 영화.",
+                accentColor: "#D91A2A",
+                baseTone: "#F8F7F4",
+                secondaryTone: "#ECEAE4",
+                visualStyle: "daylight_lines"
+            },
+            {
+                id: 9,
+                title: "ALUMINUM ACOUSTICS",
+                client: "BANG & OLUFSEN",
+                category: "COMMERCIALS",
+                year: "2025",
+                duration: "01:15",
+                seconds: 75,
+                director: "JOSEPH KAHN",
+                dp: "ROGER DEAKINS STYLE LAB",
+                production: "NOCTURNE FILMS",
+                format: "ARRI ALEXA 35",
+                synopsis: "아노다이징 알루미늄 오브제에서 울려 퍼지는 음파의 진동을 밝은 갤러리 조명과 은빛 반사광의 기하학적 파동으로 시각화한 아트 필름.",
+                accentColor: "#475569",
+                baseTone: "#F4F4F5",
+                secondaryTone: "#E4E4E7",
+                visualStyle: "architectural_grid"
+            }
+        ];
+
+        // 전역 상태 변수
+        let currentFilter = 'ALL';
+        let activeProjectIndex = 0;
+        let isPlaying = true;
+        let isMuted = false;
+        let playbackSeconds = 0;
+        let playerAnimFrame = null;
+        let heroAnimFrame = null;
+
+        /**
+         * 1. 각 프로젝트 카드의 데이라이트 에디토리얼 스튜디오 썸네일 SVG 생성기
+         * 밝은 오프화이트/샴페인/실버 톤과 프리즘 렌즈 리크가 어우러진 와이드스크린 프레임 제공
+         */
+        function generateDaylightThumbnailSVG(project, index) {
+            const seed = (index + 1) * 41;
+            const accent = project.accentColor;
+            const base = project.baseTone;
+            const secondary = project.secondaryTone;
+
+            return `
+                <svg class="thumb-media" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="dayglow-${project.id}" cx="${25 + (seed % 50)}%" cy="${30 + (seed % 35)}%" r="70%">
+                            <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1" />
+                            <stop offset="45%" stop-color="${base}" stop-opacity="0.95" />
+                            <stop offset="85%" stop-color="${secondary}" stop-opacity="1" />
+                            <stop offset="100%" stop-color="#E5E5E3" stop-opacity="1" />
+                        </radialGradient>
+                        <linearGradient id="prism-${project.id}" x1="0%" y1="45%" x2="100%" y2="55%">
+                            <stop offset="0%" stop-color="${accent}" stop-opacity="0" />
+                            <stop offset="50%" stop-color="${accent}" stop-opacity="0.28" />
+                            <stop offset="100%" stop-color="${accent}" stop-opacity="0" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- 베이스 데이라이트 스튜디오 배경 -->
+                    <rect width="800" height="450" fill="${base}" />
+                    <rect width="800" height="450" fill="url(#dayglow-${project.id})" />
+
+                    <!-- 스위스 에디토리얼 기하학 구도 & 건축 그리드 라인 -->
+                    <g opacity="0.45">
+                        <circle cx="${200 + (seed % 400)}" cy="225" r="${85 + (seed % 75)}" fill="none" stroke="#111111" stroke-width="0.65" />
+                        <line x1="0" y1="${110 + (seed % 220)}" x2="800" y2="${110 + (seed % 220)}" stroke="#111111" stroke-width="0.35" stroke-dasharray="4 6" />
+                        <line x1="${220 + (seed % 360)}" y1="0" x2="${220 + (seed % 360)}" y2="450" stroke="#111111" stroke-width="0.35" />
+                    </g>
+
+                    <!-- 데이라이트 아나모픽 프리즘 플레어 -->
+                    <rect x="0" y="${214 + (index % 3) * 10}" width="800" height="4" fill="url(#prism-${project.id})" />
+                    <ellipse cx="${260 + (seed % 280)}" cy="${216 + (index % 3) * 10}" rx="170" ry="12" fill="${accent}" opacity="0.12" />
+
+                    <!-- 2.39:1 에디토리얼 라이트 레터박스 가이드 라인 -->
+                    <rect x="0" y="0" width="800" height="24" fill="#FFFFFF" opacity="0.72" />
+                    <rect x="0" y="426" width="800" height="24" fill="#FFFFFF" opacity="0.72" />
+
+                    <!-- 코너 뷰파인더 크롭 마크 (잉크 블랙 헤어라인) -->
+                    <path d="M 24 48 L 24 36 L 38 36 M 776 48 L 776 36 L 762 36 M 24 402 L 24 414 L 38 414 M 776 402 L 776 414 L 762 414" stroke="#111111" stroke-width="1" fill="none" opacity="0.35" />
+                </svg>
+            `;
+        }
+
+        /**
+         * 2. 프로젝트 그리드 렌더링 및 카테고리 필터링
+         */
+        function renderProjectsGrid(category = 'ALL') {
+            const grid = document.getElementById('projects-grid');
+            const filtered = category === 'ALL'
+                ? PROJECTS
+                : PROJECTS.filter(p => p.category === category);
+
+            // 카운터 업데이트
+            document.getElementById('current-category-label').textContent = category === 'ALL' ? 'ALL ARCHIVE' : category;
+            document.getElementById('project-counter').textContent = `SHOWING ${String(filtered.length).padStart(2, '0')} OF ${String(PROJECTS.length).padStart(2, '0')} FILMS`;
+            document.getElementById('mobile-count').textContent = `[ ${String(filtered.length).padStart(2, '0')} WORKS ]`;
+
+            // 카드 HTML 생성 (고대비 잉크 블랙 텍스트 & 크리스프 화이트/글래스 오버레이)
+            grid.innerHTML = filtered.map((project) => {
+                const originalIndex = PROJECTS.findIndex(p => p.id === project.id);
+                return `
+                    <article onclick="openTheaterModal(${originalIndex})" class="project-card group border border-hairline" aria-label="${project.client} - ${project.title}">
+                        ${generateDaylightThumbnailSVG(project, originalIndex)}
+                        
+                        <!-- 호버 오버레이 -->
+                        <div class="project-overlay">
+                            <!-- 상단 메타 태그 -->
+                            <div class="flex items-center justify-between font-mono text-[10px] tracking-[0.22em] uppercase text-inkBlack">
+                                <span class="px-2 py-0.5 bg-white/90 border border-hairline font-medium">${project.category}</span>
+                                <span class="px-2 py-0.5 bg-white/80 text-mutedText">${project.duration} // ${project.year}</span>
+                            </div>
+
+                            <!-- 하단 타이틀 & 아티스트 -->
+                            <div class="project-title-slide">
+                                <p class="font-mono text-[11px] tracking-[0.22em] text-mutedText font-medium uppercase">
+                                    ${project.client}
+                                </p>
+                                <div class="flex items-end justify-between gap-2 mt-1">
+                                    <h3 class="text-lg sm:text-xl font-extrabold tracking-[0.08em] uppercase text-inkBlack">
+                                        ${project.title}
+                                    </h3>
+                                    <span class="font-mono text-[11px] tracking-[0.2em] text-cinemaRed font-bold shrink-0">
+                                        [ WATCH ]
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        function filterProjects(category, event) {
+            if (event) event.preventDefault();
+            currentFilter = category;
+
+            // 내비게이션 활성 스타일 갱신
+            document.querySelectorAll('.nav-link[data-filter]').forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.classList.add('active', 'text-inkBlack');
+                    btn.classList.remove('text-mutedText');
+                } else {
+                    btn.classList.remove('active', 'text-inkBlack');
+                    btn.classList.add('text-mutedText');
+                }
+            });
+
+            renderProjectsGrid(category);
+
+            // 상단 로고 클릭이 아닌 필터 버튼 클릭 시 그리드 영역으로 부드럽게 이동
+            if (!event) {
+                const gridSection = document.getElementById('work-grid-section');
+                const headerOffset = 72;
+                const elementPosition = gridSection.getBoundingClientRect().top + window.scrollY;
+                window.scrollTo({
+                    top: elementPosition - headerOffset,
+                    behavior: 'smooth'
+                });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        /**
+         * 3. 히어로 섹션 데이라이트 프리즘 & 샴페인 라이트 리크 캔버스 애니메이션
+         */
+        function initHeroCanvas() {
+            const canvas = document.getElementById('hero-canvas');
+            const ctx = canvas.getContext('2d');
+            let t = 0;
+
+            function resize() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            function drawHero() {
+                t += 0.01;
+                const w = canvas.width;
+                const h = canvas.height;
+
+                // 웜 갤러리 화이트 베이스
+                ctx.fillStyle = '#F7F7F5';
+                ctx.fillRect(0, 0, w, h);
+
+                // 부드러운 주광 샴페인/실버 빛 번짐 (Light Leak)
+                const cx = w * 0.58 + Math.sin(t * 0.65) * (w * 0.14);
+                const cy = h * 0.42 + Math.cos(t * 0.45) * (h * 0.09);
+                const grad = ctx.createRadialGradient(cx, cy, 15, cx, cy, Math.max(w, h) * 0.68);
+                grad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+                grad.addColorStop(0.35, 'rgba(243, 232, 218, 0.55)');
+                grad.addColorStop(0.7, 'rgba(229, 231, 235, 0.35)');
+                grad.addColorStop(1, 'rgba(247, 247, 245, 1)');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+
+                // 프리즘 무지개빛 미세 굴절 & 아나모픽 수평 라이트 스트릭
+                const flareY = h * 0.46 + Math.sin(t * 0.85) * 16;
+                const flareGrad = ctx.createLinearGradient(0, flareY, w, flareY);
+                flareGrad.addColorStop(0, 'rgba(217, 26, 42, 0)');
+                flareGrad.addColorStop(0.35, 'rgba(245, 158, 11, 0.14)');
+                flareGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.9)');
+                flareGrad.addColorStop(0.65, 'rgba(56, 189, 248, 0.14)');
+                flareGrad.addColorStop(1, 'rgba(217, 26, 42, 0)');
+                ctx.fillStyle = flareGrad;
+                ctx.fillRect(0, flareY - 2, w, 4);
+
+                // 스위스 에디토리얼 건축 헤어라인 그리드
+                ctx.strokeStyle = 'rgba(17, 17, 17, 0.05)';
+                ctx.lineWidth = 1;
+                for (let i = 1; i < 6; i++) {
+                    const x = (w / 6) * i;
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, h);
+                    ctx.stroke();
+                }
+
+                heroAnimFrame = requestAnimationFrame(drawHero);
+            }
+            drawHero();
+        }
+
+        /**
+         * 4. 풀스크린 브라이트 갤러리 시어터 모달 & 인터랙티브 영상 플레이어 로직
+         */
+        function openTheaterModal(index) {
+            activeProjectIndex = index;
+            const project = PROJECTS[index];
+            const modal = document.getElementById('theater-modal');
+
+            // 메타데이터 및 크레딧 바인딩
+            document.getElementById('modal-category').textContent = project.category;
+            document.getElementById('modal-year').textContent = project.year;
+            document.getElementById('modal-client').textContent = project.client;
+            document.getElementById('modal-title').textContent = project.title;
+            document.getElementById('modal-synopsis').textContent = project.synopsis;
+            document.getElementById('credit-director').textContent = project.director;
+            document.getElementById('credit-dp').textContent = project.dp;
+            document.getElementById('credit-prod').textContent = project.production;
+            document.getElementById('credit-format').textContent = project.format;
+            document.getElementById('credit-runtime').textContent = project.duration;
+            document.getElementById('duration-display').textContent = formatTimecode(project.seconds);
+            document.getElementById('modal-index-indicator').textContent =
+                `${String(index + 1).padStart(2, '0')} / ${String(PROJECTS.length).padStart(2, '0')}`;
+
+            // 플레이어 상태 초기화 및 재생 시작
+            playbackSeconds = 0;
+            isPlaying = true;
+            updatePlayUI();
+
+            modal.classList.remove('modal-hidden');
+            modal.classList.add('modal-visible');
+            document.body.style.overflow = 'hidden';
+
+            startPlayerVisualizer();
+        }
+
+        function closeTheaterModal() {
+            const modal = document.getElementById('theater-modal');
+            modal.classList.remove('modal-visible');
+            modal.classList.add('modal-hidden');
+            document.body.style.overflow = '';
+            isPlaying = false;
+            if (playerAnimFrame) cancelAnimationFrame(playerAnimFrame);
+        }
+
+        function navigateProject(direction) {
+            const nextIndex = (activeProjectIndex + direction + PROJECTS.length) % PROJECTS.length;
+            openTheaterModal(nextIndex);
+        }
+
+        function togglePlayState() {
+            isPlaying = !isPlaying;
+            updatePlayUI();
+        }
+
+        function updatePlayUI() {
+            const btn = document.getElementById('play-toggle-btn');
+            const badge = document.getElementById('player-pause-badge');
+            btn.textContent = isPlaying ? '[ PAUSE ]' : '[ PLAY ]';
+            if (isPlaying) {
+                badge.classList.add('hidden');
+            } else {
+                badge.classList.remove('hidden');
+            }
+        }
+
+        function toggleMuteState() {
+            isMuted = !isMuted;
+            const btn = document.getElementById('mute-toggle-btn');
+            btn.textContent = isMuted ? 'AUDIO: MUTED' : 'AUDIO: ON';
+            btn.classList.toggle('text-cinemaRed', isMuted);
+        }
+
+        function scrubTimeline(event) {
+            const track = document.getElementById('timeline-track');
+            const rect = track.getBoundingClientRect();
+            const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+            const project = PROJECTS[activeProjectIndex];
+            playbackSeconds = ratio * project.seconds;
+        }
+
+        function formatTimecode(totalSeconds) {
+            const hrs = Math.floor(totalSeconds / 3600);
+            const mins = Math.floor((totalSeconds % 3600) / 60);
+            const secs = Math.floor(totalSeconds % 60);
+            const frames = Math.floor((totalSeconds % 1) * 24);
+            return [hrs, mins, secs, frames].map(v => String(v).padStart(2, '0')).join(':');
+        }
+
+        /**
+         * 모달 내 실시간 데이라이트 와이드스크린 비주얼라이저 (밝은 프리즘 & 스튜디오 톤)
+         */
+        function startPlayerVisualizer() {
+            if (playerAnimFrame) cancelAnimationFrame(playerAnimFrame);
+
+            const canvas = document.getElementById('player-canvas');
+            const ctx = canvas.getContext('2d');
+            let lastTime = performance.now();
+
+            function renderFrame(now) {
+                const delta = (now - lastTime) / 1000;
+                lastTime = now;
+
+                const project = PROJECTS[activeProjectIndex];
+                if (isPlaying) {
+                    playbackSeconds += delta;
+                    if (playbackSeconds >= project.seconds) {
+                        playbackSeconds = 0;
+                    }
+                }
+
+                // 타임코드 및 프로그레스 바 갱신
+                document.getElementById('timecode-display').textContent = formatTimecode(playbackSeconds);
+                const progressPct = (playbackSeconds / project.seconds) * 100;
+                document.getElementById('timeline-progress').style.width = `${progressPct}%`;
+
+                // 캔버스 해상도 동기화
+                const w = canvas.width = canvas.clientWidth;
+                const h = canvas.height = canvas.clientHeight;
+                const t = playbackSeconds;
+
+                // 밝은 스튜디오 베이스 배경
+                ctx.fillStyle = project.baseTone;
+                ctx.fillRect(0, 0, w, h);
+
+                const pulse = Math.sin(t * 3.0) * 0.5 + 0.5;
+                const grad = ctx.createRadialGradient(
+                    w * (0.5 + Math.cos(t * 0.75) * 0.18),
+                    h * (0.48 + Math.sin(t * 0.55) * 0.12),
+                    25,
+                    w * 0.5,
+                    h * 0.5,
+                    w * 0.72
+                );
+                grad.addColorStop(0, '#FFFFFF');
+                grad.addColorStop(0.42, project.accentColor + '26');
+                grad.addColorStop(0.75, project.secondaryTone);
+                grad.addColorStop(1, '#E5E5E3');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+
+                // 비주얼 스타일별 키네틱 데이라이트 모션 그래픽
+                ctx.save();
+                if (project.visualStyle === 'daylight_lines') {
+                    ctx.strokeStyle = '#111111';
+                    for (let i = 0; i < 16; i++) {
+                        const y = ((i * 39 + t * 200) % h);
+                        const lineW = 90 + (i % 5) * 65;
+                        const x = ((t * (540 + i * 35)) % (w + lineW)) - lineW;
+                        ctx.globalAlpha = 0.08 + (i % 3) * 0.05;
+                        ctx.lineWidth = 1.2;
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(x + lineW, y);
+                        ctx.stroke();
+                    }
+                } else if (project.visualStyle === 'architectural_grid') {
+                    ctx.strokeStyle = '#111111';
+                    ctx.globalAlpha = 0.08;
+                    ctx.lineWidth = 1;
+                    const step = 52;
+                    const offset = (t * 32) % step;
+                    for (let x = offset; x < w; x += step) {
+                        ctx.beginPath();
+                        ctx.moveTo(x, 0);
+                        ctx.lineTo(x, h);
+                        ctx.stroke();
+                    }
+                    for (let y = offset; y < h; y += step) {
+                        ctx.beginPath();
+                        ctx.moveTo(0, y);
+                        ctx.lineTo(w, y);
+                        ctx.stroke();
+                    }
+                } else {
+                    // 프리즘 렌즈 굴절 하이라이트 & 오디오 리액티브 바
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.globalAlpha = 0.65 + pulse * 0.25;
+                    ctx.fillRect(0, h * 0.48 - 2, w, 4);
+
+                    const barCount = 32;
+                    const barW = (w * 0.48) / barCount;
+                    const startX = w * 0.26;
+                    for (let i = 0; i < barCount; i++) {
+                        const amp = isMuted ? 4 : (Math.abs(Math.sin(t * 5.5 + i * 0.45)) * 42 + 6);
+                        ctx.fillStyle = i % 4 === 0 ? project.accentColor : '#111111';
+                        ctx.globalAlpha = 0.22;
+                        ctx.fillRect(startX + i * barW, h * 0.48 - amp / 2, barW - 3, amp);
+                    }
+                }
+                ctx.restore();
+
+                // 상하단 2.39:1 에디토리얼 라이트 레터박스 바
+                const letterboxH = Math.max(24, h * 0.08);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+                ctx.fillRect(0, 0, w, letterboxH);
+                ctx.fillRect(0, h - letterboxH, w, letterboxH);
+
+                // 레터박스 하단 헤어라인 경계선
+                ctx.fillStyle = '#E5E5E3';
+                ctx.fillRect(0, letterboxH, w, 1);
+
+                // 레터박스 내부 다크 HUD 아카이브 워터마크
+                ctx.fillStyle = '#111111';
+                ctx.font = '500 10px "JetBrains Mono", monospace';
+                ctx.fillText(`DIRECTOR'S CUT // ${project.client} — ${project.title}`, 24, letterboxH - 8);
+                ctx.fillText(`REC ● ${formatTimecode(playbackSeconds)}`, w - 165, letterboxH - 8);
+
+                playerAnimFrame = requestAnimationFrame(renderFrame);
+            }
+
+            playerAnimFrame = requestAnimationFrame(renderFrame);
+        }
+
+        /**
+         * 5. INFO / REPRESENTATION 오버레이 & 클립보드 복사
+         */
+        function toggleInfoDrawer(show) {
+            const drawer = document.getElementById('info-drawer');
+            if (show) {
+                drawer.classList.remove('modal-hidden');
+                drawer.classList.add('modal-visible');
+                document.body.style.overflow = 'hidden';
+            } else {
+                drawer.classList.remove('modal-visible');
+                drawer.classList.add('modal-hidden');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function copyContactEmail() {
+            const email = 'MANAGEMENT@DIRECTORARCHIVE.COM';
+            const tempInput = document.createElement('input');
+            tempInput.value = email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            // 토스트 알림 표시
+            const toast = document.getElementById('toast-notification');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2600);
+        }
+
+        // 키보드 단축키 지원 (ESC 닫기, 좌우 화살표 이전/다음 작품, 스페이스바 재생/정지)
+        document.addEventListener('keydown', (e) => {
+            const theaterModal = document.getElementById('theater-modal');
+            const infoDrawer = document.getElementById('info-drawer');
+            const isTheaterOpen = theaterModal.classList.contains('modal-visible');
+            const isInfoOpen = infoDrawer.classList.contains('modal-visible');
+
+            if (e.key === 'Escape') {
+                if (isTheaterOpen) closeTheaterModal();
+                if (isInfoOpen) toggleInfoDrawer(false);
+            } else if (isTheaterOpen) {
+                if (e.key === 'ArrowRight') navigateProject(1);
+                if (e.key === 'ArrowLeft') navigateProject(-1);
+                if (e.key === ' ') {
+                    e.preventDefault();
+                    togglePlayState();
+                }
+            }
+        });
+
+        // 초기 실행
+        window.addEventListener('DOMContentLoaded', () => {
+            renderProjectsGrid('ALL');
+            initHeroCanvas();
+        });
+    </script>
+</body>
+</html>
