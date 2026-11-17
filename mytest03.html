@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINSUNG KIM — DIRECTOR & VISUAL ARCHIVE</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter & JetBrains Mono(타임코드 및 인덱스용) 폰트 로드 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        alabaster: '#F4F2ED',   /* 메인 배경: 차분한 웜 알라바스터 */
+                        sandSurface: '#EAE6DF', /* 보조 표면: 소프트 퍼티 / 웜 샌드 */
+                        greigeLine: '#D6D1C7',  /* 보더 & 헤어라인: 뮤트 그레이지 */
+                        charcoalInk: '#1C1B19', /* 메인 텍스트: 딥 차콜 잉크 */
+                        slateTaupe: '#6E6A63',  /* 보조 텍스트: 웜 슬레이트 토프 */
+                        terracotta: '#B85D43',  /* 포인트 1: 뮤트 테라코타 클레이 */
+                        sageOlive: '#5A6B5C',   /* 포인트 2: 세이지 올리브 */
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* 에디토리얼 웜 라이트 컬러 변수 및 기본 스타일 */
+        :root {
+            --bg-alabaster: #F4F2ED;
+            --surface-sand: #EAE6DF;
+            --border-greige: #D6D1C7;
+            --text-ink: #1C1B19;
+            --text-taupe: #6E6A63;
+            --accent-terracotta: #B85D43;
+            --accent-sage: #5A6B5C;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            background-color: var(--bg-alabaster);
+            color: var(--text-ink);
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-alabaster);
+            color: var(--text-ink);
+            overflow-x: hidden;
+        }
+
+        /* 미세한 아날로그 페이퍼 & 필름 그레인 질감 */
+        .editorial-grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 40;
+            opacity: 0.028;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* 포트폴리오 카드 스타일 (조화로운 톤온톤 & 절제된 호버 줌) */
+        .project-card {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .thumb-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: var(--surface-sand);
+            border: 1px solid var(--border-greige);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .thumb-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-card:hover .thumb-media {
+            transform: scale(1.028);
+        }
+
+        /* 호버 시 우측 상단 미니멀 재생 배지 */
+        .watch-pill {
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .project-card:hover .watch-pill {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 내비게이션 탭 언더라인 (테라코타 포인트) */
+        .nav-link {
+            position: relative;
+            letter-spacing: 0.14em;
+            transition: color 0.25s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 0%;
+            height: 1.5px;
+            background-color: var(--accent-terracotta);
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-link.active {
+            color: var(--text-ink);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after,
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* 커스텀 스크롤바 (웜 톤) */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-alabaster);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-greige);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-taupe);
+        }
+
+        /* 모달 페이드 트랜지션 */
+        .modal-backdrop {
+            transition: opacity 0.3s ease;
+        }
+        .modal-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-alabaster text-charcoalInk font-sans selection:bg-terracotta selection:text-alabaster">
+
+    <!-- 미세한 페이퍼/필름 그레인 텍스처 -->
+    <div class="editorial-grain"></div>
+
+    <!-- =====================================================================
+         1. STICKY EDITORIAL HEADER (반투명 웜 알라바스터 + 그레이지 헤어라인)
+    ====================================================================== -->
+    <header class="sticky top-0 z-30 bg-alabaster/90 backdrop-blur-md border-b border-greigeLine">
+        <div class="max-w-[1600px] mx-auto px-5 sm:px-10 py-4 sm:py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <!-- 좌측: 디렉터 워드마크 & 서브타이틀 -->
+            <div class="flex items-center justify-between">
+                <a href="#" onclick="filterProjects('ALL', event)" class="group flex items-baseline gap-3">
+                    <span class="text-base sm:text-lg font-extrabold tracking-[0.22em] uppercase text-charcoalInk group-hover:text-terracotta transition-colors">
+                        MINSUNG KIM
+                    </span>
+                    <span class="font-mono text-[11px] tracking-[0.18em] text-slateTaupe uppercase hidden sm:inline">
+                        DIRECTOR / VISUAL ARCHIVE
+                    </span>
+                </a>
+                <!-- 모바일 작품 수 카운터 -->
+                <span id="mobile-count" class="md:hidden font-mono text-[11px] text-slateTaupe tracking-widest">
+                    [ 12 WORKS ]
+                </span>
+            </div>
+
+            <!-- 우측: 카테고리 필터 탭 & ABOUT 이동 -->
+            <nav aria-label="Primary Navigation" class="flex flex-wrap items-center gap-5 sm:gap-8 text-[11px] sm:text-xs font-medium uppercase text-slateTaupe">
+                <button onclick="filterProjects('ALL')" data-filter="ALL" class="nav-link active cursor-pointer py-1">
+                    ALL
+                </button>
+                <button onclick="filterProjects('MUSIC VIDEOS')" data-filter="MUSIC VIDEOS" class="nav-link hover:text-charcoalInk cursor-pointer py-1">
+                    MUSIC VIDEOS
+                </button>
+                <button onclick="filterProjects('COMMERCIALS')" data-filter="COMMERCIALS" class="nav-link hover:text-charcoalInk cursor-pointer py-1">
+                    COMMERCIALS
+                </button>
+                <button onclick="filterProjects('FILMS')" data-filter="FILMS" class="nav-link hover:text-charcoalInk cursor-pointer py-1">
+                    FILMS
+                </button>
+                <span class="text-greigeLine hidden sm:inline">|</span>
+                <a href="#about-section" class="nav-link hover:text-terracotta py-1">
+                    ABOUT
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- =====================================================================
+         2. EDITORIAL HERO SHOWCASE SECTION (갤러리 프레임 21:9 / 16:9 와이드 릴)
+    ====================================================================== -->
+    <section class="max-w-[1600px] mx-auto px-5 sm:px-10 pt-8 sm:pt-12 pb-10 sm:pb-14">
+        <!-- 쇼케이스 프레임 컨테이너 -->
+        <div onclick="openTheaterModal(0)" class="group relative w-full aspect-[16/9] lg:aspect-[21/9] bg-sandSurface border border-greigeLine rounded-[4px] overflow-hidden cursor-pointer shadow-[0_8px_30px_rgba(28,27,25,0.04)]">
+            <!-- 밝고 조화로운 에디토리얼 톤의 실시간 제너레이티브 캔버스 -->
+            <canvas id="hero-canvas" class="w-full h-full block"></canvas>
+
+            <!-- 좌측 상단 갤러리 텔레메트리 오버레이 -->
+            <div class="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-2.5 px-3 py-1.5 bg-alabaster/85 backdrop-blur-sm border border-greigeLine rounded-[3px] font-mono text-[10px] sm:text-[11px] tracking-[0.18em] text-charcoalInk uppercase">
+                <span class="w-1.5 h-1.5 rounded-full bg-terracotta animate-pulse"></span>
+                <span>FEATURED INSTALLATION // 2.39:1</span>
+            </div>
+
+            <!-- 우측 상단 타임코드 오버레이 -->
+            <div id="hero-timecode" class="hidden sm:block absolute top-6 right-6 px-3 py-1.5 bg-alabaster/80 backdrop-blur-sm border border-greigeLine rounded-[3px] font-mono text-[11px] tracking-[0.16em] text-slateTaupe">
+                TC 00:00:12:08
+            </div>
+
+            <!-- 중앙 호버 인터랙션 프롬프트 -->
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div class="px-5 py-2.5 bg-alabaster/90 backdrop-blur-md border border-charcoalInk/20 rounded-[3px] font-mono text-xs tracking-[0.22em] text-charcoalInk uppercase opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 shadow-sm">
+                    [ SCREEN FEATURED FILM ]
+                </div>
+            </div>
+        </div>
+
+        <!-- 히어로 하단 에디토리얼 캡션 바 -->
+        <div class="mt-5 pt-4 border-b border-greigeLine pb-6 flex flex-col md:flex-row md:items-end justify-between gap-5">
+            <div>
+                <div class="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] uppercase text-terracotta font-medium">
+                    <span>00 // FEATURED REEL</span>
+                    <span class="text-greigeLine">&bull;</span>
+                    <span class="text-slateTaupe">MUSIC VIDEO / 2025</span>
+                </div>
+                <h1 class="mt-1.5 text-2xl sm:text-4xl font-bold tracking-[0.04em] uppercase text-charcoalInk">
+                    SOLSTICE IN KYOTO
+                </h1>
+                <p class="mt-1 text-xs sm:text-sm tracking-[0.12em] uppercase text-slateTaupe">
+                    CLIENT: <span class="text-charcoalInk font-medium">AURA COLLECTIVE</span> &nbsp;/&nbsp; FORMAT: 35MM KODAK VISION3 250D
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="openTheaterModal(0)" class="inline-flex items-center gap-3 px-6 py-3 bg-charcoalInk text-alabaster hover:bg-terracotta transition-colors duration-300 text-xs font-mono font-medium tracking-[0.2em] uppercase rounded-[4px] cursor-pointer">
+                    <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    <span>WATCH REEL</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         3. PORTFOLIO GRID SECTION (조화로운 3열 16:9 와이드스크린 아카이브)
+    ====================================================================== -->
+    <main id="work-grid-section" class="max-w-[1600px] mx-auto px-5 sm:px-10 pb-20">
+        <!-- 그리드 상단 메타 필터 상태 바 -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-6 font-mono text-[11px] tracking-[0.18em] text-slateTaupe uppercase">
+            <div class="flex items-center gap-2.5">
+                <span class="w-2 h-2 rounded-full bg-sageOlive"></span>
+                <span>INDEX:</span>
+                <span id="current-category-label" class="text-charcoalInk font-semibold">ALL ARCHIVE</span>
+            </div>
+            <div>
+                <span id="project-counter">SHOWING 12 OF 12 WORKS</span>
+            </div>
+        </div>
+
+        <!-- 3열(태블릿 2열, 모바일 1열) 건축적 여백(18px) 포트폴리오 그리드 -->
+        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-9">
+            <!-- JavaScript로 프로젝트 카드가 동적 생성됩니다 -->
+        </div>
+    </main>
+
+    <!-- =====================================================================
+         4. CLEAN EDITORIAL ABOUT & REPRESENTATION SECTION (하단 2단 그리드)
+    ====================================================================== -->
+    <section id="about-section" class="border-t border-greigeLine bg-sandSurface/60">
+        <div class="max-w-[1600px] mx-auto px-5 sm:px-10 py-16 sm:py-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+                <!-- 좌측 컬럼: 디렉터 스테이트먼트 & 바이오 -->
+                <div class="lg:col-span-7 space-y-6">
+                    <span class="inline-block font-mono text-[11px] tracking-[0.22em] text-terracotta uppercase font-medium">
+                        ABOUT // DIRECTORIAL APPROACH
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-[0.02em] leading-snug text-charcoalInk">
+                        건축적 여백과 자연광의 밀도, 정밀한 카메라 리듬으로 구축하는 현대적 시각 서사.
+                    </h2>
+                    <p class="text-sm sm:text-base text-slateTaupe leading-relaxed max-w-2xl font-normal">
+                        서울과 로스앤젤레스, 도쿄를 기반으로 활동하며 글로벌 뮤직비디오, 하이엔드 패션·모빌리티 커머셜, 단편 영화를 연출합니다. 과장된 장식을 배제하고 피사체의 질감과 공간의 빛을 정교하게 포착하는 미니멀리즘 비주얼을 추구합니다.
+                    </p>
+                    <div class="pt-2 flex flex-wrap gap-6 font-mono text-xs text-charcoalInk tracking-[0.12em] uppercase">
+                        <div>
+                            <span class="block text-[10px] text-slateTaupe mb-1">RECOGNITION</span>
+                            <span>CANNES LIONS SHORTLIST &bull; VMA NOMINEE &bull; D&amp;AD PENCIL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 우측 컬럼: 에이전시, 이메일 및 로케이션 정보 -->
+                <div class="lg:col-span-5 lg:border-l lg:border-greigeLine lg:pl-12 space-y-8">
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.22em] text-slateTaupe uppercase mb-2">
+                            DIRECT CONTACT &amp; TREATMENTS
+                        </span>
+                        <button onclick="copyContactEmail()" class="group inline-flex items-center gap-3 px-4 py-3 bg-alabaster border border-greigeLine hover:border-terracotta rounded-[4px] transition-colors cursor-pointer">
+                            <span class="font-mono text-xs sm:text-sm font-medium text-charcoalInk tracking-[0.08em]">
+                                STUDIO@MINSUNGKIM.FILM
+                            </span>
+                            <span class="font-mono text-[10px] tracking-[0.16em] text-terracotta uppercase group-hover:underline">
+                                [ COPY ]
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2 border-t border-greigeLine">
+                        <div>
+                            <span class="block font-mono text-[10px] tracking-[0.2em] text-sageOlive uppercase font-semibold mb-1.5">
+                                SEOUL / ASIA
+                            </span>
+                            <p class="text-sm font-semibold text-charcoalInk">ATELIER MONOLITH</p>
+                            <p class="text-xs text-slateTaupe mt-0.5">Hannam-daero, Yongsan-gu</p>
+                            <p class="text-xs text-slateTaupe font-mono mt-0.5">+82 2 555 0192</p>
+                        </div>
+
+                        <div>
+                            <span class="block font-mono text-[10px] tracking-[0.2em] text-sageOlive uppercase font-semibold mb-1.5">
+                                LOS ANGELES / US
+                            </span>
+                            <p class="text-sm font-semibold text-charcoalInk">VERDANT PICTURES</p>
+                            <p class="text-xs text-slateTaupe mt-0.5">Culver City, CA 90232</p>
+                            <p class="text-xs text-slateTaupe font-mono mt-0.5">+1 310 555 0148</p>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 flex items-center gap-6 font-mono text-[11px] tracking-[0.18em] text-slateTaupe uppercase">
+                        <a href="#top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="hover:text-charcoalInk transition-colors">
+                            &uarr; BACK TO TOP
+                        </a>
+                        <span>&bull;</span>
+                        <span>INSTAGRAM / VIMEO</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 최하단 카피라이트 바 -->
+            <div class="mt-14 pt-6 border-t border-greigeLine flex flex-col sm:flex-row items-center justify-between gap-2 font-mono text-[11px] tracking-[0.16em] text-slateTaupe uppercase">
+                <span>&copy; 2026 MINSUNG KIM VISUAL ARCHIVE. ALL RIGHTS RESERVED.</span>
+                <span>CURATED IN WARM ALABASTER &amp; STONE</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         5. FULLSCREEN LIGHT-EDITORIAL THEATER MODAL (밝은 갤러리 시어터)
+    ====================================================================== -->
+    <div id="theater-modal" class="modal-backdrop modal-hidden fixed inset-0 z-50 bg-alabaster/[0.96] backdrop-blur-lg flex flex-col justify-between p-4 sm:p-8 overflow-y-auto" role="dialog" aria-modal="true">
+        
+        <!-- 모달 상단 바: 카테고리, 연도 및 닫기 버튼 -->
+        <div class="w-full max-w-6xl mx-auto flex items-center justify-between pb-4 border-b border-greigeLine">
+            <div class="flex items-center gap-3 font-mono text-xs tracking-[0.18em] uppercase">
+                <span id="modal-index" class="text-terracotta font-semibold">01</span>
+                <span class="text-greigeLine">/</span>
+                <span id="modal-category" class="text-charcoalInk font-medium">MUSIC VIDEO</span>
+                <span class="text-greigeLine">&bull;</span>
+                <span id="modal-year" class="text-slateTaupe">2025</span>
+            </div>
+            <button onclick="closeTheaterModal()" class="font-mono text-xs tracking-[0.18em] uppercase text-charcoalInk hover:text-terracotta bg-sandSurface hover:bg-alabaster border border-greigeLine hover:border-terracotta px-3.5 py-1.5 rounded-[4px] transition-colors cursor-pointer">
+                [ CLOSE / ESC ]
+            </button>
+        </div>
+
+        <!-- 모달 중앙: 16:9 인터랙티브 플레이어 & 컨트롤 바 -->
+        <div class="w-full max-w-6xl mx-auto my-auto py-5">
+            <div class="relative w-full aspect-video bg-sandSurface border border-greigeLine rounded-[4px] overflow-hidden shadow-[0_16px_48px_rgba(28,27,25,0.08)]">
+                <!-- 16:9 비주얼 캔버스 -->
+                <canvas id="player-canvas" class="w-full h-full block cursor-pointer" onclick="togglePlayState()"></canvas>
+
+                <!-- 일시정지 배지 -->
+                <div id="player-pause-badge" class="hidden absolute inset-0 flex items-center justify-center bg-alabaster/35 backdrop-blur-[2px] pointer-events-none">
+                    <div class="px-5 py-2.5 bg-alabaster border border-charcoalInk/30 rounded-[3px] font-mono text-xs tracking-[0.22em] uppercase text-charcoalInk shadow-sm">
+                        PAUSED
+                    </div>
+                </div>
+
+                <!-- 하단 플레이어 컨트롤 바 (웜 샌드 반투명 스타일) -->
+                <div class="absolute bottom-0 left-0 right-0 bg-alabaster/92 backdrop-blur-md border-t border-greigeLine px-4 sm:px-6 py-3.5 flex flex-col gap-2.5">
+                    <!-- 타임라인 스크러버 -->
+                    <div id="timeline-track" onclick="scrubTimeline(event)" class="w-full h-1.5 bg-greigeLine hover:h-2 transition-all rounded-full cursor-pointer relative overflow-hidden">
+                        <div id="timeline-progress" class="h-full bg-terracotta w-0"></div>
+                    </div>
+
+                    <!-- 재생/일시정지 & 타임코드 -->
+                    <div class="flex items-center justify-between font-mono text-[11px] sm:text-xs tracking-[0.14em] text-charcoalInk">
+                        <div class="flex items-center gap-4">
+                            <button id="play-toggle-btn" onclick="togglePlayState()" class="hover:text-terracotta font-semibold uppercase cursor-pointer">
+                                [ PAUSE ]
+                            </button>
+                            <span id="timecode-display">00:00:00:00</span>
+                            <span class="text-greigeLine hidden sm:inline">/</span>
+                            <span id="duration-display" class="text-slateTaupe hidden sm:inline">00:03:24:00</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 text-slateTaupe">
+                            <span class="hidden md:inline">24FPS &bull; DI MASTER</span>
+                            <span class="text-charcoalInk font-medium">SOUND: STEREO</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 작품 타이틀 및 상세 프로덕션 크레딧 -->
+            <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <div class="lg:col-span-6">
+                    <div id="modal-client" class="font-mono text-xs tracking-[0.18em] text-terracotta uppercase font-medium mb-1">
+                        CLIENT / ARTIST
+                    </div>
+                    <h2 id="modal-title" class="text-2xl sm:text-3xl font-bold tracking-[0.04em] uppercase text-charcoalInk">
+                        PROJECT TITLE
+                    </h2>
+                    <p id="modal-synopsis" class="mt-2.5 text-xs sm:text-sm text-slateTaupe leading-relaxed max-w-xl">
+                        작품 시놉시스 설명 영역입니다.
+                    </p>
+                </div>
+
+                <!-- 5단 프로덕션 크레딧 그리드 -->
+                <div class="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-4 pt-3 lg:pt-0 border-t lg:border-t-0 lg:border-l border-greigeLine lg:pl-8 text-xs">
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.18em] text-slateTaupe uppercase">DIRECTOR</span>
+                        <span id="credit-director" class="block mt-1 font-semibold text-charcoalInk uppercase">MINSUNG KIM</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.18em] text-slateTaupe uppercase">CINEMATOGRAPHER</span>
+                        <span id="credit-dp" class="block mt-1 font-semibold text-charcoalInk uppercase">JIHOON PARK</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.18em] text-slateTaupe uppercase">FORMAT</span>
+                        <span id="credit-format" class="block mt-1 font-semibold text-charcoalInk uppercase">35MM FILM</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.18em] text-slateTaupe uppercase">COLORIST</span>
+                        <span id="credit-colorist" class="block mt-1 font-semibold text-charcoalInk uppercase">SOFIA CHEN</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.18em] text-slateTaupe uppercase">YEAR / RUNTIME</span>
+                        <span id="credit-year-runtime" class="block mt-1 font-semibold text-charcoalInk uppercase">2025 // 03:24</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 모달 하단: 이전 / 다음 프로젝트 내비게이션 -->
+        <div class="w-full max-w-6xl mx-auto pt-4 border-t border-greigeLine flex items-center justify-between font-mono text-xs tracking-[0.18em] uppercase text-charcoalInk">
+            <button onclick="navigateProject(-1)" class="hover:text-terracotta transition-colors py-1.5 cursor-pointer">
+                &larr; PREV WORK
+            </button>
+            <span id="modal-index-indicator" class="text-slateTaupe">01 / 12</span>
+            <button onclick="navigateProject(1)" class="hover:text-terracotta transition-colors py-1.5 cursor-pointer">
+                NEXT WORK &rarr;
+            </button>
+        </div>
+    </div>
+
+    <!-- 토스트 알림 (이메일 복사 완료 피드백) -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 bg-charcoalInk text-alabaster px-5 py-3 rounded-[4px] font-mono text-xs tracking-[0.16em] uppercase shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        STUDIO@MINSUNGKIM.FILM COPIED
+    </div>
+
+    <!-- =====================================================================
+         JAVASCRIPT: 데이터 구조, 웜 미니멀 썸네일 생성기, 필터링 및 플레이어 로직
+    ====================================================================== -->
+    <script>
+        /**
+         * [포트폴리오 데이터 배열]
+         * 각 항목의 title, client, category, year, palette 등을 수정하면
+         * 메인 그리드와 상세 시어터 모달에 즉시 반영됩니다.
+         */
+        const PROJECTS = [
+            {
+                id: 1,
+                indexStr: "01",
+                title: "SOLSTICE IN KYOTO",
+                client: "AURA COLLECTIVE",
+                category: "MUSIC VIDEOS",
+                year: "2025",
+                duration: "03:24",
+                seconds: 204,
+                director: "MINSUNG KIM",
+                dp: "JIHOON PARK",
+                format: "35MM KODAK 250D",
+                colorist: "SOFIA CHEN (COMPANY 3)",
+                synopsis: "이른 아침 교토의 목조 사찰과 안개 낀 대나무 숲을 스며드는 자연광의 결을 정적인 트래킹 숏과 시적인 안무로 담아낸 뮤직비디오.",
+                bgTone: "#E6E0D4",
+                primaryShape: "#B85D43",   // Muted Terracotta
+                secondaryShape: "#5A6B5C", // Sage Olive
+                inkTone: "#2D2B28",
+                artPattern: "solar_arch"
+            },
+            {
+                id: 2,
+                indexStr: "02",
+                title: "FORM & SILENCE",
+                client: "LEICA CAMERA",
+                category: "COMMERCIALS",
+                year: "2025",
+                duration: "01:45",
+                seconds: 105,
+                director: "MINSUNG KIM",
+                dp: "LUKAS WEBER",
+                format: "ARRI ALEXA 35",
+                colorist: "MATTHIEU TOULLET",
+                synopsis: "빛과 그림자가 건축물의 콘크리트 표면을 가로지르는 찰나의 순간을 포착한 라이카 글로벌 브랜드 필름.",
+                bgTone: "#E2DDD3",
+                primaryShape: "#4A525A",   // Warm Slate
+                secondaryShape: "#C4A484", // Warm Sand Ochre
+                inkTone: "#1C1B19",
+                artPattern: "monolith_shadow"
+            },
+            {
+                id: 3,
+                indexStr: "03",
+                title: "THE PAPER PAVILION",
+                client: "BUSAN INTL FILM FESTIVAL",
+                category: "FILMS",
+                year: "2025",
+                duration: "14:20",
+                seconds: 860,
+                director: "MINSUNG KIM",
+                dp: "SEOYEON CHOI",
+                format: "16MM ARRIFLEX SR3",
+                colorist: "YUJIN KANG",
+                synopsis: "바닷가 언덕 위 한옥 작업실에서 두 건축가가 계절의 변화를 기록하며 나누는 대화를 담은 단편 극영화.",
+                bgTone: "#E8E3D9",
+                primaryShape: "#5A6B5C",   // Sage Olive
+                secondaryShape: "#B85D43", // Terracotta
+                inkTone: "#262522",
+                artPattern: "horizon_layers"
+            },
+            {
+                id: 4,
+                indexStr: "04",
+                title: "TERRACOTTA DRIFT",
+                client: "HYUNDAI IONIQ LAB",
+                category: "COMMERCIALS",
+                year: "2024",
+                duration: "01:30",
+                seconds: 90,
+                director: "MINSUNG KIM",
+                dp: "JIHOON PARK",
+                format: "RED V-RAPTOR 8K VV",
+                colorist: "SOFIA CHEN",
+                synopsis: "광활한 석회암 지대와 붉은 사막 평원을 미끄러지듯 주행하는 콘셉트카의 조형미를 미니멀한 사운드 디자인과 결합한 필름.",
+                bgTone: "#E5DFD3",
+                primaryShape: "#B85D43",
+                secondaryShape: "#8C8275",
+                inkTone: "#1C1B19",
+                artPattern: "kinetic_curves"
+            },
+            {
+                id: 5,
+                indexStr: "05",
+                title: "GLASS HARMONICA",
+                client: "HYUKOH // DOO-ROO-DOO-ROO",
+                category: "MUSIC VIDEOS",
+                year: "2024",
+                duration: "04:12",
+                seconds: 252,
+                director: "MINSUNG KIM",
+                dp: "DONGHYUN KIM",
+                format: "35MM ANAMORPHIC",
+                colorist: "HANNAH LEE",
+                synopsis: "거대한 온실 속 반투명 유리 패널 사이로 굴절되는 오후의 햇살과 밴드의 라이브 연주를 원테이크 호흡으로 포착한 작품.",
+                bgTone: "#DFDDD6",
+                primaryShape: "#5A6B5C",
+                secondaryShape: "#9E988E",
+                inkTone: "#1C1B19",
+                artPattern: "prism_grid"
+            },
+            {
+                id: 6,
+                indexStr: "06",
+                title: "STILLNESS IN MOTION",
+                client: "LEMAIRE PARIS",
+                category: "COMMERCIALS",
+                year: "2024",
+                duration: "02:10",
+                seconds: 130,
+                director: "MINSUNG KIM",
+                dp: "CLAIRE DUBOIS",
+                format: "SUPER 16MM",
+                colorist: "ARTHUR PEYRON",
+                synopsis: "파리 마레 지구의 고요한 안뜰에서 바람에 흔들리는 리넨과 울 소재의 자연스러운 움직임을 관찰한 패션 필름.",
+                bgTone: "#EAE5DC",
+                primaryShape: "#8E7F70",
+                secondaryShape: "#B85D43",
+                inkTone: "#232220",
+                artPattern: "drape_waves"
+            },
+            {
+                id: 7,
+                indexStr: "07",
+                title: "NORTHERN TIDE",
+                client: "INDEPENDENT SHORT",
+                category: "FILMS",
+                year: "2024",
+                duration: "18:05",
+                seconds: 1085,
+                director: "MINSUNG KIM",
+                dp: "JIHOON PARK",
+                format: "ARRI ALEXA MINI LF",
+                colorist: "YUJIN KANG",
+                synopsis: "겨울 끝자락 동해안의 작은 항구 마을에서 오래된 등대를 복원하는 엔지니어의 고요한 일상을 그린 에세이 필름.",
+                bgTone: "#DFE2E0",
+                primaryShape: "#52636B",   // Muted Slate Blue
+                secondaryShape: "#5A6B5C",
+                inkTone: "#1C1B19",
+                artPattern: "horizon_layers"
+            },
+            {
+                id: 8,
+                indexStr: "08",
+                title: "PAPER LANTERNS",
+                client: "PEGGY GOU // XL",
+                category: "MUSIC VIDEOS",
+                year: "2024",
+                duration: "03:48",
+                seconds: 228,
+                director: "MINSUNG KIM",
+                dp: "SEOYEON CHOI",
+                format: "35MM KODAK 500T",
+                colorist: "SOFIA CHEN",
+                synopsis: "한지 조명과 모던 건축 공간이 어우러진 세트에서 경쾌한 하우스 비트와 절제된 카메라 워킹이 교차하는 댄스 필름.",
+                bgTone: "#E7E1D5",
+                primaryShape: "#B85D43",
+                secondaryShape: "#C99E67",
+                inkTone: "#1C1B19",
+                artPattern: "solar_arch"
+            },
+            {
+                id: 9,
+                indexStr: "09",
+                title: "OBJECT NO. 09",
+                client: "VITRA DESIGN MUSEUM",
+                category: "COMMERCIALS",
+                year: "2023",
+                duration: "01:55",
+                seconds: 115,
+                director: "MINSUNG KIM",
+                dp: "LUKAS WEBER",
+                format: "ARRI ALEXA 65",
+                colorist: "MATTHIEU TOULLET",
+                synopsis: "20세기 모더니즘 가구 아카이브의 기하학적 비례와 장인정신을 매크로 렌즈와 정교한 조명으로 탐구한 다큐멘터리 커머셜.",
+                bgTone: "#E3DFD7",
+                primaryShape: "#5A6B5C",
+                secondaryShape: "#7A746B",
+                inkTone: "#1C1B19",
+                artPattern: "monolith_shadow"
+            },
+            {
+                id: 10,
+                indexStr: "10",
+                title: "ECHOES OF CLAY",
+                client: "SE SO NEON",
+                category: "MUSIC VIDEOS",
+                year: "2023",
+                duration: "03:56",
+                seconds: 236,
+                director: "MINSUNG KIM",
+                dp: "DONGHYUN KIM",
+                format: "16MM & 35MM MIXED",
+                colorist: "HANNAH LEE",
+                synopsis: "거친 흙과 도자기 공방의 질감 속에서 피어나는 강렬한 기타 리프와 감정의 파동을 아날로그 필름 입자로 담아낸 작품.",
+                bgTone: "#E6DDD2",
+                primaryShape: "#A6533C",
+                secondaryShape: "#6E6A63",
+                inkTone: "#1C1B19",
+                artPattern: "drape_waves"
+            },
+            {
+                id: 11,
+                indexStr: "11",
+                title: "WINTER OBSERVATORY",
+                client: "CJ ENM / SHORT LAB",
+                category: "FILMS",
+                year: "2023",
+                duration: "12:40",
+                seconds: 760,
+                director: "MINSUNG KIM",
+                dp: "JIHOON PARK",
+                format: "ARRI ALEXA MINI LF",
+                colorist: "YUJIN KANG",
+                synopsis: "해발 1,200미터 천문대에서 일식 관측을 기다리는 두 연구원의 미묘한 심리적 거리를 미니멀한 구도로 그려낸 단편 영화.",
+                bgTone: "#E1E2DF",
+                primaryShape: "#5A6B5C",
+                secondaryShape: "#4A525A",
+                inkTone: "#1C1B19",
+                artPattern: "prism_grid"
+            },
+            {
+                id: 12,
+                indexStr: "12",
+                title: "PURE ACOUSTICS",
+                client: "POLESTAR DESIGN",
+                category: "COMMERCIALS",
+                year: "2023",
+                duration: "01:20",
+                seconds: 80,
+                director: "MINSUNG KIM",
+                dp: "CLAIRE DUBOIS",
+                format: "RED V-RAPTOR XL",
+                colorist: "ARTHUR PEYRON",
+                synopsis: "북유럽의 설원과 미니멀한 스튜디오를 오가며 정숙함 속에서 울리는 순수한 공간 음향을 시각화한 글로벌 필름.",
+                bgTone: "#E8E6E1",
+                primaryShape: "#78756E",
+                secondaryShape: "#B85D43",
+                inkTone: "#1C1B19",
+                artPattern: "kinetic_curves"
+            }
+        ];
+
+        // 전역 상태 변수
+        let currentFilter = 'ALL';
+        let activeProjectIndex = 0;
+        let isPlaying = true;
+        let playbackSeconds = 0;
+        let playerAnimFrame = null;
+
+        /**
+         * 1. 밝고 조화로운 에디토리얼 톤의 16:9 벡터 아트워크 썸네일 생성기
+         * 외부 이미지 링크 깨짐 없이 모던 갤러리 전시 작품 같은 고품질 썸네일 제공
+         */
+        function generateEditorialThumbnailSVG(project) {
+            const { bgTone, primaryShape, secondaryShape, inkTone, artPattern, indexStr } = project;
+            let motifMarkup = '';
+
+            if (artPattern === 'solar_arch') {
+                motifMarkup = `
+                    <circle cx="520" cy="215" r="115" fill="${primaryShape}" opacity="0.82" />
+                    <path d="M 160 450 A 190 190 0 0 1 540 450 Z" fill="${secondaryShape}" opacity="0.65" />
+                    <line x1="80" y1="310" x2="720" y2="310" stroke="${inkTone}" stroke-width="1" opacity="0.25" />
+                `;
+            } else if (artPattern === 'monolith_shadow') {
+                motifMarkup = `
+                    <rect x="230" y="75" width="130" height="300" fill="${primaryShape}" opacity="0.85" />
+                    <polygon points="360,75 560,155 560,450 360,375" fill="${secondaryShape}" opacity="0.5" />
+                    <circle cx="540" cy="120" r="36" fill="${inkTone}" opacity="0.15" />
+                `;
+            } else if (artPattern === 'horizon_layers') {
+                motifMarkup = `
+                    <rect x="0" y="245" width="800" height="205" fill="${primaryShape}" opacity="0.6" />
+                    <path d="M 0 295 Q 260 235 520 285 T 800 265 L 800 450 L 0 450 Z" fill="${secondaryShape}" opacity="0.78" />
+                    <circle cx="240" cy="145" r="48" fill="${secondaryShape}" opacity="0.45" />
+                `;
+            } else if (artPattern === 'kinetic_curves') {
+                motifMarkup = `
+                    <path d="M -40 360 C 220 120, 480 410, 840 140" fill="none" stroke="${primaryShape}" stroke-width="48" opacity="0.75" />
+                    <path d="M -40 390 C 240 160, 500 430, 840 180" fill="none" stroke="${secondaryShape}" stroke-width="12" opacity="0.7" />
+                    <circle cx="585" cy="175" r="26" fill="${inkTone}" opacity="0.7" />
+                `;
+            } else if (artPattern === 'prism_grid') {
+                motifMarkup = `
+                    <rect x="180" y="70" width="210" height="310" fill="${primaryShape}" opacity="0.45" />
+                    <rect x="330" y="110" width="240" height="240" fill="${secondaryShape}" opacity="0.55" />
+                    <line x1="180" y1="225" x2="620" y2="225" stroke="${inkTone}" stroke-width="1" opacity="0.3" />
+                    <line x1="390" y1="50" x2="390" y2="400" stroke="${inkTone}" stroke-width="1" opacity="0.3" />
+                `;
+            } else {
+                // drape_waves
+                motifMarkup = `
+                    <path d="M 120 0 Q 220 225 140 450 L 340 450 Q 420 225 320 0 Z" fill="${primaryShape}" opacity="0.72" />
+                    <path d="M 380 0 Q 480 225 400 450 L 580 450 Q 660 225 560 0 Z" fill="${secondaryShape}" opacity="0.55" />
+                `;
+            }
+
+            return `
+                <svg class="thumb-media" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 웜 스톤 / 샌드 베이스 캔버스 -->
+                    <rect width="800" height="450" fill="${bgTone}" />
+                    
+                    <!-- 미세한 은은한 비네팅 그라데이션 -->
+                    <defs>
+                        <radialGradient id="soft-light-${project.id}" cx="35%" cy="30%" r="75%">
+                            <stop offset="0%" stop-color="#FAF8F5" stop-opacity="0.65" />
+                            <stop offset="100%" stop-color="${bgTone}" stop-opacity="0" />
+                        </radialGradient>
+                    </defs>
+                    <rect width="800" height="450" fill="url(#soft-light-${project.id})" />
+
+                    <!-- 추상 에디토리얼 조형 모티프 -->
+                    ${motifMarkup}
+
+                    <!-- 건축적 뷰파인더 헤어라인 가이드 -->
+                    <rect x="24" y="24" width="752" height="402" fill="none" stroke="${inkTone}" stroke-width="0.6" opacity="0.18" />
+                    <text x="38" y="46" fill="${inkTone}" opacity="0.45" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2">FRAME // ${indexStr}</text>
+                </svg>
+            `;
+        }
+
+        /**
+         * 2. 포트폴리오 3열 그리드 렌더링 및 카테고리 필터링
+         */
+        function renderProjectsGrid(category = 'ALL') {
+            const grid = document.getElementById('projects-grid');
+            const filtered = category === 'ALL'
+                ? PROJECTS
+                : PROJECTS.filter(p => p.category === category);
+
+            // 상단 및 모바일 카운터 갱신
+            document.getElementById('current-category-label').textContent = category === 'ALL' ? 'ALL ARCHIVE' : category;
+            document.getElementById('project-counter').textContent = `SHOWING ${String(filtered.length).padStart(2, '0')} OF ${String(PROJECTS.length).padStart(2, '0')} WORKS`;
+            document.getElementById('mobile-count').textContent = `[ ${filtered.length} WORKS ]`;
+
+            // 카드 HTML 생성 (16:9 프레임 + 하단 깔끔한 타이포그래피 메타데이터)
+            grid.innerHTML = filtered.map((project) => {
+                const originalIndex = PROJECTS.findIndex(p => p.id === project.id);
+                return `
+                    <article onclick="openTheaterModal(${originalIndex})" class="project-card group" aria-label="${project.title}">
+                        <!-- 16:9 와이드 프레임 -->
+                        <div class="thumb-frame">
+                            ${generateEditorialThumbnailSVG(project)}
+
+                            <!-- 호버 시 우측 상단 미니멀 재생 배지 -->
+                            <div class="watch-pill absolute top-3.5 right-3.5 px-3 py-1 bg-alabaster/95 backdrop-blur-sm border border-charcoalInk/20 rounded-[3px] font-mono text-[10px] tracking-[0.18em] text-charcoalInk uppercase shadow-xs">
+                                [ PLAY &bull; ${project.duration} ]
+                            </div>
+                        </div>
+
+                        <!-- 프레임 하단 에디토리얼 캡션 -->
+                        <div class="pt-3.5 flex items-baseline justify-between gap-3">
+                            <div class="flex items-baseline gap-2.5 min-w-0">
+                                <span class="font-mono text-xs text-terracotta font-medium shrink-0">
+                                    ${project.indexStr}
+                                </span>
+                                <h3 class="text-sm sm:text-base font-bold tracking-[0.04em] uppercase text-charcoalInk group-hover:text-terracotta transition-colors truncate">
+                                    ${project.title}
+                                </h3>
+                            </div>
+                            <span class="font-mono text-[11px] tracking-[0.14em] text-slateTaupe shrink-0">
+                                ${project.year}
+                            </span>
+                        </div>
+
+                        <div class="mt-1 pl-6 flex items-center justify-between font-mono text-[11px] tracking-[0.12em] text-slateTaupe uppercase">
+                            <span class="truncate">${project.client}</span>
+                            <span class="text-[10px] text-sageOlive shrink-0 ml-2">${project.category}</span>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        function filterProjects(category, event) {
+            if (event) event.preventDefault();
+            currentFilter = category;
+
+            // 내비게이션 활성 탭 스타일 업데이트
+            document.querySelectorAll('.nav-link[data-filter]').forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            renderProjectsGrid(category);
+
+            if (!event) {
+                const gridSection = document.getElementById('work-grid-section');
+                const offset = 84;
+                const y = gridSection.getBoundingClientRect().top + window.scrollY - offset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        /**
+         * 3. 히어로 섹션 제너레이티브 캔버스 (밝고 차분한 갤러리 필름 설치 미술 무드)
+         */
+        function initHeroCanvas() {
+            const canvas = document.getElementById('hero-canvas');
+            const ctx = canvas.getContext('2d');
+            const tcDisplay = document.getElementById('hero-timecode');
+            let t = 0;
+
+            function resize() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            function drawHero() {
+                t += 0.01;
+                const w = canvas.width;
+                const h = canvas.height;
+
+                // 소프트 웜 샌드 베이스 (#EAE6DF)
+                ctx.fillStyle = '#EAE6DF';
+                ctx.fillRect(0, 0, w, h);
+
+                // 자연광이 스며드는 듯한 부드러운 알라바스터 & 테라코타 앰비언트 글로우
+                const sunX = w * 0.62 + Math.sin(t * 0.6) * (w * 0.08);
+                const sunY = h * 0.44 + Math.cos(t * 0.4) * (h * 0.06);
+                const sunGrad = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, Math.max(w, h) * 0.55);
+                sunGrad.addColorStop(0, 'rgba(250, 248, 243, 0.95)');
+                sunGrad.addColorStop(0.45, 'rgba(184, 93, 67, 0.14)');
+                sunGrad.addColorStop(1, 'rgba(234, 230, 223, 0)');
+                ctx.fillStyle = sunGrad;
+                ctx.fillRect(0, 0, w, h);
+
+                // 뮤트 테라코타 & 세이지 올리브 기하학 필름 레이어
+                ctx.save();
+                ctx.fillStyle = 'rgba(184, 93, 67, 0.72)';
+                ctx.beginPath();
+                ctx.arc(w * 0.64 + Math.cos(t * 0.5) * 18, h * 0.52, Math.min(w, h) * 0.24, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = 'rgba(90, 107, 92, 0.62)';
+                const archW = Math.min(w * 0.34, 420);
+                const archX = w * 0.24 + Math.sin(t * 0.45) * 22;
+                ctx.fillRect(archX, h * 0.26, archW, h * 0.74);
+
+                // 건축적 헤어라인 그리드 & 크롭 마크
+                ctx.strokeStyle = 'rgba(28, 27, 25, 0.14)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, h * 0.5);
+                ctx.lineTo(w, h * 0.5);
+                ctx.moveTo(w * 0.5, 0);
+                ctx.lineTo(w * 0.5, h);
+                ctx.stroke();
+                ctx.restore();
+
+                // 히어로 텔레메트리 타임코드 업데이트
+                if (tcDisplay) {
+                    const sec = (t * 2.5) % 60;
+                    const f = Math.floor((sec % 1) * 24);
+                    tcDisplay.textContent = `TC 00:00:${String(Math.floor(sec)).padStart(2, '0')}:${String(f).padStart(2, '0')}`;
+                }
+
+                requestAnimationFrame(drawHero);
+            }
+            drawHero();
+        }
+
+        /**
+         * 4. 풀스크린 라이트 에디토리얼 시어터 모달 & 플레이어
+         */
+        function openTheaterModal(index) {
+            activeProjectIndex = index;
+            const project = PROJECTS[index];
+            const modal = document.getElementById('theater-modal');
+
+            // 메타데이터 & 크레딧 바인딩
+            document.getElementById('modal-index').textContent = project.indexStr;
+            document.getElementById('modal-category').textContent = project.category;
+            document.getElementById('modal-year').textContent = project.year;
+            document.getElementById('modal-client').textContent = project.client;
+            document.getElementById('modal-title').textContent = project.title;
+            document.getElementById('modal-synopsis').textContent = project.synopsis;
+            document.getElementById('credit-director').textContent = project.director;
+            document.getElementById('credit-dp').textContent = project.dp;
+            document.getElementById('credit-format').textContent = project.format;
+            document.getElementById('credit-colorist').textContent = project.colorist;
+            document.getElementById('credit-year-runtime').textContent = `${project.year} // ${project.duration}`;
+            document.getElementById('duration-display').textContent = formatTimecode(project.seconds);
+            document.getElementById('modal-index-indicator').textContent =
+                `${project.indexStr} / ${String(PROJECTS.length).padStart(2, '0')}`;
+
+            playbackSeconds = 0;
+            isPlaying = true;
+            updatePlayUI();
+
+            modal.classList.remove('modal-hidden');
+            modal.classList.add('modal-visible');
+            document.body.style.overflow = 'hidden';
+
+            startPlayerVisualizer();
+        }
+
+        function closeTheaterModal() {
+            const modal = document.getElementById('theater-modal');
+            modal.classList.remove('modal-visible');
+            modal.classList.add('modal-hidden');
+            document.body.style.overflow = '';
+            isPlaying = false;
+            if (playerAnimFrame) cancelAnimationFrame(playerAnimFrame);
+        }
+
+        function navigateProject(direction) {
+            const nextIndex = (activeProjectIndex + direction + PROJECTS.length) % PROJECTS.length;
+            openTheaterModal(nextIndex);
+        }
+
+        function togglePlayState() {
+            isPlaying = !isPlaying;
+            updatePlayUI();
+        }
+
+        function updatePlayUI() {
+            const btn = document.getElementById('play-toggle-btn');
+            const badge = document.getElementById('player-pause-badge');
+            btn.textContent = isPlaying ? '[ PAUSE ]' : '[ PLAY ]';
+            if (isPlaying) {
+                badge.classList.add('hidden');
+            } else {
+                badge.classList.remove('hidden');
+            }
+        }
+
+        function scrubTimeline(event) {
+            const track = document.getElementById('timeline-track');
+            const rect = track.getBoundingClientRect();
+            const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+            const project = PROJECTS[activeProjectIndex];
+            playbackSeconds = ratio * project.seconds;
+        }
+
+        function formatTimecode(totalSeconds) {
+            const hrs = Math.floor(totalSeconds / 3600);
+            const mins = Math.floor((totalSeconds % 3600) / 60);
+            const secs = Math.floor(totalSeconds % 60);
+            const frames = Math.floor((totalSeconds % 1) * 24);
+            return [hrs, mins, secs, frames].map(v => String(v).padStart(2, '0')).join(':');
+        }
+
+        /**
+         * 모달 내 밝은 갤러리 톤의 16:9 비주얼 플레이어 렌더링
+         */
+        function startPlayerVisualizer() {
+            if (playerAnimFrame) cancelAnimationFrame(playerAnimFrame);
+
+            const canvas = document.getElementById('player-canvas');
+            const ctx = canvas.getContext('2d');
+            let lastTime = performance.now();
+
+            function renderFrame(now) {
+                const delta = (now - lastTime) / 1000;
+                lastTime = now;
+
+                const project = PROJECTS[activeProjectIndex];
+                if (isPlaying) {
+                    playbackSeconds += delta;
+                    if (playbackSeconds >= project.seconds) {
+                        playbackSeconds = 0;
+                    }
+                }
+
+                // 타임코드 & 프로그레스 바 동기화
+                document.getElementById('timecode-display').textContent = formatTimecode(playbackSeconds);
+                const progressPct = (playbackSeconds / project.seconds) * 100;
+                document.getElementById('timeline-progress').style.width = `${progressPct}%`;
+
+                const w = canvas.width = canvas.clientWidth;
+                const h = canvas.height = canvas.clientHeight;
+                const t = playbackSeconds;
+
+                // 프로젝트 고유 웜 스톤/샌드 배경
+                ctx.fillStyle = project.bgTone;
+                ctx.fillRect(0, 0, w, h);
+
+                // 부드러운 빛의 확산
+                const glowX = w * (0.45 + Math.cos(t * 0.7) * 0.15);
+                const glowY = h * (0.42 + Math.sin(t * 0.5) * 0.1);
+                const radGrad = ctx.createRadialGradient(glowX, glowY, 15, glowX, glowY, w * 0.65);
+                radGrad.addColorStop(0, 'rgba(250, 248, 244, 0.85)');
+                radGrad.addColorStop(1, 'rgba(234, 230, 223, 0)');
+                ctx.fillStyle = radGrad;
+                ctx.fillRect(0, 0, w, h);
+
+                // 키네틱 조형 애니메이션
+                ctx.save();
+                ctx.fillStyle = project.primaryShape;
+                ctx.globalAlpha = 0.78;
+                ctx.beginPath();
+                ctx.arc(
+                    w * 0.5 + Math.sin(t * 1.1) * (w * 0.14),
+                    h * 0.46 + Math.cos(t * 0.8) * (h * 0.06),
+                    Math.min(w, h) * 0.21,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+
+                ctx.fillStyle = project.secondaryShape;
+                ctx.globalAlpha = 0.55;
+                const rectW = w * 0.28;
+                const rectH = h * 0.42;
+                ctx.fillRect(
+                    w * 0.36 - Math.sin(t * 0.9) * 45,
+                    h * 0.25,
+                    rectW,
+                    rectH
+                );
+
+                // 수평/수직 뷰파인더 헤어라인
+                ctx.strokeStyle = project.inkTone;
+                ctx.globalAlpha = 0.18;
+                ctx.lineWidth = 1;
+                ctx.strokeRect(28, 24, w - 56, h - 96);
+                ctx.restore();
+
+                // 상단 뷰파인더 워터마크
+                ctx.fillStyle = project.inkTone;
+                ctx.globalAlpha = 0.65;
+                ctx.font = '500 11px "JetBrains Mono", monospace';
+                ctx.fillText(`SCREENING // ${project.indexStr} — ${project.title}`, 42, 46);
+                ctx.fillText(`${project.format}`, w - 210, 46);
+
+                playerAnimFrame = requestAnimationFrame(renderFrame);
+            }
+
+            playerAnimFrame = requestAnimationFrame(renderFrame);
+        }
+
+        /**
+         * 5. 이메일 원클릭 복사 및 토스트 피드백
+         */
+        function copyContactEmail() {
+            const email = 'STUDIO@MINSUNGKIM.FILM';
+            const tempInput = document.createElement('input');
+            tempInput.value = email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            const toast = document.getElementById('toast-notification');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
+        }
+
+        // 키보드 단축키 지원
+        document.addEventListener('keydown', (e) => {
+            const modal = document.getElementById('theater-modal');
+            const isOpen = modal.classList.contains('modal-visible');
+
+            if (isOpen) {
+                if (e.key === 'Escape') closeTheaterModal();
+                if (e.key === 'ArrowRight') navigateProject(1);
+                if (e.key === 'ArrowLeft') navigateProject(-1);
+                if (e.key === ' ') {
+                    e.preventDefault();
+                    togglePlayState();
+                }
+            }
+        });
+
+        // 초기 실행
+        window.addEventListener('DOMContentLoaded', () => {
+            renderProjectsGrid('ALL');
+            initHeroCanvas();
+        });
+    </script>
+</body>
+</html>
