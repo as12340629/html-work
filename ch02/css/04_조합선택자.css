@@ -1,0 +1,18 @@
+  h2, h3 { /* h2와 h3 전체 */
+            color: saddlebrown;
+        }
+        .menu li {  /* 밑의 모든 li */
+            color: gray;
+        }
+        .menu > li {  /* 바로 밑 li */
+            font-weight: bold;
+            color: red;
+        }
+        input {
+            padding: 5px;
+            font-size: 16px;
+        }
+        input[type="text"] {  /* input 상자 중 타입이  text인것만 가리킴 */
+            border: 2px solid tomato;
+            border-radius: 10px;
+        }
