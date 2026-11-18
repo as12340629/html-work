@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRECTOR ARCHIVE — WARM EDITORIAL PORTFOLIO</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter & JetBrains Mono(타임코드용) 폰트 로드 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        stoneBg: '#F4F3EF',
+                        sandSurface: '#EAE7E0',
+                        ivoryCard: '#FAF9F6',
+                        hairline: '#DCD8CE',
+                        charcoal: '#181816',
+                        mutedSlate: '#6B6860',
+                        intlOrange: '#FF4D00',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* 밝고 단조로우면서 모던한 웜 에디토리얼 컬러 시스템 */
+        :root {
+            --bg-primary: #F4F3EF;
+            --bg-secondary: #EAE7E0;
+            --bg-card: #FAF9F6;
+            --border-hairline: #DCD8CE;
+            --text-primary: #181816;
+            --text-muted: #6B6860;
+            --accent-orange: #FF4D00;
+            --accent-tint: rgba(255, 77, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* 미세한 에디토리얼 페이퍼/필름 텍스처 오버레이 */
+        .paper-grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 40;
+            opacity: 0.028;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* 조셉 칸 스타일 16:9 와이드스크린 프로젝트 카드 + 웜 에디토리얼 호버 */
+        .project-card {
+            position: relative;
+            overflow: hidden;
+            background-color: var(--bg-card);
+            aspect-ratio: 16 / 9;
+            cursor: pointer;
+            border: 1px solid var(--border-hairline);
+            transition: border-color 0.35s ease, box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-orange);
+            box-shadow: 0 12px 30px -10px rgba(24, 24, 22, 0.14);
+        }
+
+        .project-card .thumb-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+        }
+
+        .project-card:hover .thumb-media {
+            transform: scale(1.04);
+            filter: contrast(1.04) saturate(1.08);
+        }
+
+        /* 중앙 오렌지 플레이 버튼 인디케이터 */
+        .center-play-pill {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-card:hover .center-play-pill {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* 상단 내비게이션 오렌지 언더라인 트랜지션 */
+        .nav-link {
+            position: relative;
+            letter-spacing: 0.14em;
+            transition: color 0.25s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0%;
+            height: 2px;
+            background-color: var(--accent-orange);
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* 커스텀 스크롤바 (웜 샌드 & 인터내셔널 오렌지) */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F4F3EF;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D0CBC0;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF4D00;
+        }
+
+        /* 모달 페이드 애니메이션 */
+        .modal-backdrop {
+            transition: opacity 0.32s ease;
+        }
+        .modal-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-stoneBg text-charcoal font-sans selection:bg-intlOrange selection:text-ivoryCard">
+
+    <!-- 미세한 에디토리얼 페이퍼 그레인 -->
+    <div class="paper-grain"></div>
+
+    <!-- =====================================================================
+         1. MINIMALIST FIXED HEADER (TRANSLUCENT WARM ALABASTER)
+    ====================================================================== -->
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-30 bg-stoneBg/90 backdrop-blur-md border-b border-hairline">
+        <div class="w-full px-4 sm:px-8 h-16 flex items-center justify-between">
+            <!-- 좌측: 브랜드 타이틀 + 시그니처 오렌지 닷 -->
+            <a href="#" onclick="filterProjects('ALL', event)" class="inline-flex items-center gap-2.5 text-sm sm:text-base font-extrabold tracking-[0.22em] uppercase text-charcoal hover:opacity-80 transition-opacity">
+                <span class="w-2.5 h-2.5 rounded-full bg-intlOrange inline-block"></span>
+                <span>STUDIO KIM</span>
+                <span class="hidden sm:inline font-mono text-[11px] font-normal tracking-[0.18em] text-mutedSlate ml-1">/ ARCHIVE</span>
+            </a>
+
+            <!-- 우측: 미니멀 섹션 내비게이션 -->
+            <nav aria-label="Primary Navigation" class="flex items-center gap-5 sm:gap-8 text-[11px] sm:text-xs font-semibold uppercase text-charcoal">
+                <a href="#work-grid-section" class="nav-link hover:text-intlOrange py-1">
+                    WORK
+                </a>
+                <button onclick="openTheaterModal(0)" class="nav-link hover:text-intlOrange py-1 cursor-pointer uppercase">
+                    REEL
+                </button>
+                <a href="#about-footer" class="nav-link hover:text-intlOrange py-1">
+                    ABOUT / CONTACT
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- =====================================================================
+         2. BRIGHT EDITORIAL HERO SECTION (FRAMED WIDESCREEN REEL)
+    ====================================================================== -->
+    <section class="pt-22 sm:pt-24 pb-6 sm:pb-8 px-3 sm:px-6 bg-stoneBg border-b border-hairline">
+        <div class="w-full max-w-[1800px] mx-auto">
+            <!-- 상단 에디토리얼 메타 바 -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-3 text-[11px] font-mono tracking-[0.18em] text-mutedSlate uppercase">
+                <div class="flex items-center gap-2.5">
+                    <span class="px-2 py-0.5 rounded-sm bg-intlOrange/10 text-intlOrange font-semibold border border-intlOrange/25">
+                        DIRECTOR'S REEL 2026
+                    </span>
+                    <span class="hidden md:inline">VISUAL DIRECTION &amp; MUSIC VIDEO ARCHIVE</span>
+                </div>
+                <span>SEOUL &bull; LOS ANGELES &bull; LONDON</span>
+            </div>
+
+            <!-- 프레임형 21:9 / 16:9 시네마 쇼케이스 컨테이너 -->
+            <div class="relative w-full aspect-[16/9] sm:aspect-[21/9] min-h-[300px] max-h-[620px] rounded-md overflow-hidden border border-hairline bg-sandSurface shadow-sm group">
+                <!-- 라이트 모드 제너레이티브 모션 아트 캔버스 -->
+                <canvas id="hero-canvas" class="absolute inset-0 w-full h-full block"></canvas>
+
+                <!-- 가독성을 위한 은은한 웜 라이트 그라데이션 비네트 -->
+                <div class="absolute inset-0 bg-gradient-to-t from-ivoryCard/90 via-ivoryCard/15 to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-ivoryCard/80 via-transparent to-transparent pointer-events-none"></div>
+
+                <!-- 좌측 하단 피처드 타이틀 & 오렌지 재생 CTA -->
+                <div class="absolute bottom-5 sm:bottom-8 left-5 sm:left-8 right-5 sm:right-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-10">
+                    <div>
+                        <p class="font-mono text-[10px] sm:text-xs tracking-[0.22em] text-intlOrange font-semibold uppercase mb-1">
+                            FEATURED SHOWCASE // 01
+                        </p>
+                        <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-[0.06em] uppercase text-charcoal leading-tight">
+                            RUN
+                        </h1>
+                        <p class="mt-1 text-xs sm:text-sm tracking-[0.14em] uppercase text-mutedSlate font-medium">
+                            CLIENT: ONE REPUBLIC // BAND <span class="mx-2 text-hairline">|</span> DIR. MINSUNG KIM
+                        </p>
+                    </div>
+
+                    <button onclick="openTheaterModal(0)" class="self-start sm:self-end inline-flex items-center gap-3 px-5 py-3 bg-charcoal text-ivoryCard hover:bg-intlOrange transition-colors duration-300 text-xs font-mono font-semibold tracking-[0.18em] uppercase rounded-sm shadow-md cursor-pointer">
+                        <span class="w-2 h-2 rounded-full bg-intlOrange group-hover:bg-ivoryCard transition-colors"></span>
+                        <span>PLAY FEATURED REEL</span>
+                        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         3. STICKY CATEGORY FILTER BAR (WARM SAND & INTERNATIONAL ORANGE PILL)
+    ====================================================================== -->
+    <div id="work-grid-section" class="sticky top-16 z-20 w-full bg-sandSurface/95 backdrop-blur-md border-b border-hairline px-3 sm:px-6 py-3">
+        <div class="w-full max-w-[1800px] mx-auto flex flex-wrap items-center justify-between gap-3">
+            <!-- 카테고리 탭 버튼 -->
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2" role="tablist" aria-label="Project Categories">
+                <button onclick="filterProjects('ALL')" data-filter="ALL" class="filter-tab active px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-[0.14em] uppercase transition-all cursor-pointer bg-intlOrange text-ivoryCard shadow-xs">
+                    ALL
+                </button>
+                <button onclick="filterProjects('MUSIC VIDEOS')" data-filter="MUSIC VIDEOS" class="filter-tab px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-[0.14em] uppercase transition-all cursor-pointer text-mutedSlate hover:text-charcoal hover:bg-ivoryCard/70">
+                    MUSIC VIDEOS
+                </button>
+                <button onclick="filterProjects('COMMERCIALS')" data-filter="COMMERCIALS" class="filter-tab px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-[0.14em] uppercase transition-all cursor-pointer text-mutedSlate hover:text-charcoal hover:bg-ivoryCard/70">
+                    COMMERCIALS
+                </button>
+                <button onclick="filterProjects('FILMS')" data-filter="FILMS" class="filter-tab px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-[0.14em] uppercase transition-all cursor-pointer text-mutedSlate hover:text-charcoal hover:bg-ivoryCard/70">
+                    FILMS
+                </button>
+            </div>
+
+            <!-- 실시간 작품 카운트 인디케이터 -->
+            <div class="flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-mutedSlate uppercase">
+                <span class="hidden sm:inline">INDEX:</span>
+                <span id="project-counter" class="px-2.5 py-1 rounded-sm bg-ivoryCard border border-hairline text-charcoal font-semibold">
+                    12 WORKS
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         4. TIGHT 16:9 WIDESCREEN PROJECT GRID (6PX GAPS ON WARM STONE)
+    ====================================================================== -->
+    <main class="w-full bg-stoneBg px-[6px] py-[6px]">
+        <div class="w-full max-w-[1800px] mx-auto">
+            <!-- 조셉 칸 시그니처 3열(태블릿 2열, 모바일 1열) 타이트 6px 갭 그리드 -->
+            <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[6px]">
+                <!-- JavaScript로 16:9 와이드스크린 타일이 동적 생성됩니다 -->
+            </div>
+        </div>
+    </main>
+
+    <!-- =====================================================================
+         5. CLEAN ARCHITECTURAL ABOUT & CONTACT FOOTER
+    ====================================================================== -->
+    <footer id="about-footer" class="w-full bg-sandSurface border-t border-hairline px-4 sm:px-8 py-14 sm:py-20 mt-4">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 items-start">
+            <!-- 좌측 컬럼: 디렉터 에디토리얼 바이오 -->
+            <div class="md:col-span-7 space-y-4">
+                <div class="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] text-intlOrange font-semibold uppercase">
+                    <span class="w-2 h-2 rounded-full bg-intlOrange"></span>
+                    <span>ABOUT THE STUDIO</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-[0.04em] text-charcoal uppercase leading-snug">
+                    ARCHITECTURAL PRECISION MEETS KINETIC FILMMAKING.
+                </h2>
+                <p class="text-sm sm:text-base text-mutedSlate leading-relaxed max-w-2xl font-normal">
+                    감각적인 색채 대비, 치밀한 카메라 워킹, 그리고 리드미컬한 편집으로 뮤직비디오와 글로벌 브랜드 필름, 장편 영화를 연출하는 디렉터 포트폴리오 아카이브입니다. 차분한 여백 속에 강렬한 시각적 에너지를 담아냅니다.
+                </p>
+
+                <!-- 이메일 원클릭 복사 버튼 -->
+                <div class="pt-3">
+                    <button onclick="copyContactEmail()" class="group inline-flex items-center gap-3 px-4 py-2.5 bg-ivoryCard border border-hairline hover:border-intlOrange rounded-sm text-xs font-mono tracking-[0.14em] text-charcoal transition-all cursor-pointer shadow-2xs">
+                        <span>BOOKING@STUDIOKIM.COM</span>
+                        <span class="px-2 py-0.5 rounded-xs bg-intlOrange/10 text-intlOrange font-semibold group-hover:bg-intlOrange group-hover:text-ivoryCard transition-colors">
+                            COPY
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 우측 컬럼: 글로벌 에이전시 & 소셜 링크 -->
+            <div class="md:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2 md:border-l md:border-hairline md:pl-10">
+                <div>
+                    <h3 class="font-mono text-[11px] tracking-[0.2em] text-mutedSlate uppercase mb-2">REPRESENTATION</h3>
+                    <ul class="space-y-2.5 text-xs sm:text-sm font-medium text-charcoal">
+                        <li>
+                            <span class="block text-[10px] font-mono text-intlOrange uppercase">US / GLOBAL</span>
+                            SUPERMEGA FILMS LA
+                        </li>
+                        <li>
+                            <span class="block text-[10px] font-mono text-intlOrange uppercase">ASIA / SEOUL</span>
+                            ATELIER VISION SEOUL
+                        </li>
+                        <li>
+                            <span class="block text-[10px] font-mono text-intlOrange uppercase">UK / EUROPE</span>
+                            SOLARIS PRODUCTIONS
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-mono text-[11px] tracking-[0.2em] text-mutedSlate uppercase mb-2">CHANNELS</h3>
+                    <ul class="space-y-2 text-xs sm:text-sm font-medium text-charcoal">
+                        <li><a href="#work-grid-section" class="hover:text-intlOrange transition-colors">VIMEO STAFF PICKS &nearr;</a></li>
+                        <li><a href="#work-grid-section" class="hover:text-intlOrange transition-colors">INSTAGRAM ARCHIVE &nearr;</a></li>
+                        <li><a href="#work-grid-section" class="hover:text-intlOrange transition-colors">IMDB CREDITS &nearr;</a></li>
+                        <li><a href="#work-grid-section" class="hover:text-intlOrange transition-colors">PRESS KIT (PDF) &nearr;</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto mt-12 pt-6 border-t border-hairline flex flex-col sm:flex-row items-center justify-between gap-2 font-mono text-[11px] tracking-[0.16em] text-mutedSlate uppercase">
+            <span>&copy; 2026 STUDIO KIM. ALL RIGHTS RESERVED.</span>
+            <span>WARM EDITORIAL EDITION // 16:9 WIDESCREEN</span>
+        </div>
+    </footer>
+
+    <!-- =====================================================================
+         6. FULLSCREEN LIGHT-EDITORIAL THEATER MODAL (YOUTUBE + CANVAS SUPPORT)
+    ====================================================================== -->
+    <div id="theater-modal" class="modal-backdrop modal-hidden fixed inset-0 z-50 bg-stoneBg/[0.97] backdrop-blur-md flex flex-col justify-between p-4 sm:p-8 overflow-y-auto" role="dialog" aria-modal="true">
+        
+        <!-- 모달 상단 헤더: 카테고리 배지 & 닫기 버튼 -->
+        <div class="w-full max-w-6xl mx-auto flex items-center justify-between pb-4 border-b border-hairline">
+            <div class="flex items-center gap-3 font-mono text-xs tracking-[0.18em] uppercase">
+                <span id="modal-category" class="px-2.5 py-0.5 rounded-xs bg-intlOrange/10 text-intlOrange font-semibold border border-intlOrange/25">MUSIC VIDEOS</span>
+                <span class="text-hairline">/</span>
+                <span id="modal-year" class="text-mutedSlate font-medium">2026</span>
+            </div>
+            <button onclick="closeTheaterModal()" class="text-xs font-mono font-semibold tracking-[0.18em] uppercase text-charcoal hover:text-intlOrange bg-ivoryCard border border-hairline hover:border-intlOrange transition-colors py-1.5 px-3.5 rounded-sm cursor-pointer">
+                CLOSE [ESC]
+            </button>
+        </div>
+
+        <!-- 모달 중앙: 16:9 유튜브 임베드 플레이어 또는 커스텀 비주얼라이저 플레이어 -->
+        <div class="w-full max-w-6xl mx-auto my-auto py-4">
+            <div class="relative w-full aspect-video bg-charcoal border border-hairline rounded-sm overflow-hidden shadow-lg">
+                <!-- 유튜브 실제 영상 플레이어 -->
+                <iframe
+                    id="youtube-player"
+                    class="hidden w-full h-full border-0"
+                    src=""
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+                </iframe>
+
+                <!-- 프로젝트별 고유 컬러 무드 캔버스 (유튜브 링크가 없는 예비 프로젝트용) -->
+                <canvas id="player-canvas" class="w-full h-full block cursor-pointer" onclick="togglePlayState()"></canvas>
+
+                <!-- 일시정지 상태 배지 -->
+                <div id="player-pause-badge" class="hidden absolute inset-0 flex items-center justify-center bg-stoneBg/35 backdrop-blur-[2px] pointer-events-none">
+                    <div class="px-5 py-2.5 rounded-sm bg-ivoryCard border border-intlOrange font-mono text-xs font-semibold tracking-[0.22em] uppercase text-charcoal shadow-md">
+                        PAUSED
+                    </div>
+                </div>
+
+                <!-- 하단 반투명 아이보리 컨트롤 바 (캔버스 플레이어 전용) -->
+                <div id="custom-player-controls" class="absolute bottom-0 left-0 right-0 bg-ivoryCard/95 backdrop-blur-md border-t border-hairline px-4 sm:px-6 py-3 flex flex-col gap-2.5">
+                    <!-- 인터랙티브 오렌지 스크러버 바 -->
+                    <div id="timeline-track" onclick="scrubTimeline(event)" class="w-full h-1.5 bg-sandSurface hover:h-2 transition-all rounded-full cursor-pointer relative overflow-hidden">
+                        <div id="timeline-progress" class="h-full bg-intlOrange w-0 rounded-full"></div>
+                    </div>
+
+                    <!-- 재생/일시정지, 실시간 타임코드, 사운드 토글 -->
+                    <div class="flex items-center justify-between font-mono text-[11px] sm:text-xs tracking-[0.14em]">
+                        <div class="flex items-center gap-4">
+                            <button id="play-toggle-btn" onclick="togglePlayState()" class="text-charcoal hover:text-intlOrange uppercase font-bold cursor-pointer">
+                                PAUSE
+                            </button>
+                            <span id="timecode-display" class="text-charcoal font-semibold">00:00:00:00</span>
+                            <span class="text-mutedSlate hidden sm:inline">/</span>
+                            <span id="duration-display" class="text-mutedSlate hidden sm:inline">00:02:54:00</span>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <span class="hidden md:inline text-mutedSlate">24FPS &bull; MASTER GRADE</span>
+                            <button id="mute-toggle-btn" onclick="toggleMuteState()" class="text-charcoal hover:text-intlOrange font-medium uppercase cursor-pointer">
+                                AUDIO: ON
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 작품 타이틀 & 구조화된 프로덕션 크레딧 -->
+            <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start bg-ivoryCard p-5 sm:p-6 rounded-sm border border-hairline">
+                <div class="lg:col-span-6">
+                    <div id="modal-client" class="text-xs font-mono font-semibold tracking-[0.2em] text-intlOrange uppercase mb-1">
+                        ONE REPUBLIC // BAND
+                    </div>
+                    <h2 id="modal-title" class="text-2xl sm:text-3xl font-extrabold tracking-[0.05em] uppercase text-charcoal">
+                        PROJECT TITLE
+                    </h2>
+                    <p id="modal-synopsis" class="mt-2.5 text-xs sm:text-sm text-mutedSlate leading-relaxed">
+                        Editorial visual treatment blending architectural sunlight, warm terracotta tones, and dynamic kinetic camera movement.
+                    </p>
+                </div>
+
+                <!-- 크레딧 그리드 -->
+                <div class="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-4 pt-3 lg:pt-0 border-t lg:border-t-0 lg:border-l border-hairline lg:pl-8 text-xs">
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.18em] text-mutedSlate uppercase">DIRECTOR</span>
+                        <span id="credit-director" class="block mt-1 font-bold text-charcoal uppercase">MINSUNG KIM</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.18em] text-mutedSlate uppercase">CLIENT</span>
+                        <span id="credit-client" class="block mt-1 font-bold text-charcoal uppercase">ONE REPUBLIC // BAND</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.18em] text-mutedSlate uppercase">CINEMATOGRAPHER</span>
+                        <span id="credit-dp" class="block mt-1 font-bold text-charcoal uppercase">C. PROBST</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.18em] text-mutedSlate uppercase">FORMAT</span>
+                        <span id="credit-format" class="block mt-1 font-medium text-mutedSlate uppercase">ARRI ALEXA 65</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.18em] text-mutedSlate uppercase">YEAR</span>
+                        <span id="credit-year" class="block mt-1 font-medium text-mutedSlate uppercase">2026</span>
+                    </div>
+                    <div>
+                        <span class="block font-mono text-[10px] tracking-[0.18em] text-mutedSlate uppercase">RUNTIME</span>
+                        <span id="credit-runtime" class="block mt-1 font-medium text-mutedSlate uppercase">02:54</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 모달 하단: 이전 / 다음 작품 이동 -->
+        <div class="w-full max-w-6xl mx-auto pt-4 border-t border-hairline flex items-center justify-between text-xs font-mono font-semibold tracking-[0.18em] uppercase">
+            <button onclick="navigateProject(-1)" class="text-charcoal hover:text-intlOrange transition-colors py-1.5 cursor-pointer">
+                &larr; PREV PROJECT
+            </button>
+            <span id="modal-index-indicator" class="text-mutedSlate">01 / 12</span>
+            <button onclick="navigateProject(1)" class="text-charcoal hover:text-intlOrange transition-colors py-1.5 cursor-pointer">
+                NEXT PROJECT &rarr;
+            </button>
+        </div>
+    </div>
+
+    <!-- 커스텀 토스트 알림 -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 bg-charcoal text-ivoryCard border-l-4 border-intlOrange px-5 py-3 rounded-sm text-xs font-mono font-semibold tracking-[0.16em] uppercase shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        EMAIL COPIED TO CLIPBOARD
+    </div>
+
+    <!-- =====================================================================
+         JAVASCRIPT: 프로젝트 데이터 배열, 밝은 에디토리얼 아트워크, 유튜브 모달 로직
+    ====================================================================== -->
+    <script>
+        const PROJECTS = [
+            {
+                id: 1,
+                title: "RUN",
+                client: "ONE REPUBLIC // BAND",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "02:54",
+                seconds: 174,
+                director: "MINSUNG KIM",
+                dp: "CHRISTOPHER PROBST",
+                format: "ARRI ALEXA 65 // ANAMORPHIC",
+                synopsis: "역동적인 리듬과 햇살이 쏟아지는 모더니즘 공간을 가로지르며 삶의 에너지를 시각적으로 풀어낸 원리퍼블릭의 공식 뮤직비디오.",
+                youtubeId: "TKkcsmvYTw4",
+                bgTone: "#EDE6DA",
+                primaryAccent: "#FF4D00",
+                secondaryTone: "#C89B7B",
+                artPattern: "architectural_arch"
+            },
+            {
+                id: 2,
+                title: "I AIN'T WORRIED",
+                client: "ONE REPUBLIC // BAND",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "02:34",
+                seconds: 154,
+                director: "MINSUNG KIM",
+                dp: "HOYTE VAN HOYTEMA",
+                format: "35MM KODAK VISION3 250D",
+                synopsis: "따스한 해변의 태양광과 자유로운 청춘의 순간을 35mm 필름의 따뜻한 색감과 경쾌한 편집으로 담아낸 뮤직비디오.",
+                youtubeId: "mNEUkkoUoIA",
+                bgTone: "#F2E2D5",
+                primaryAccent: "#FF4D00",
+                secondaryTone: "#E07A5F",
+                artPattern: "sun_prism"
+            },
+            {
+                id: 3,
+                title: "WHEREVER I GO",
+                client: "ONE REPUBLIC // BAND",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "03:17",
+                seconds: 197,
+                director: "MINSUNG KIM",
+                dp: "JASPER WOLF",
+                format: "ARRI ALEXA MINI LF",
+                synopsis: "반복되는 일상 속 사무실 공간을 초현실적인 안무와 유쾌한 미장센으로 해방시키는 원테이크 감각의 뮤직비디오.",
+                youtubeId: "OXWrjWDQh7Q",
+                bgTone: "#E6E4DD",
+                primaryAccent: "#E85D04",
+                secondaryTone: "#5C677D",
+                artPattern: "horizon_split"
+            },
+            {
+                id: 4,
+                title: "COUNTING STARS",
+                client: "ONE REPUBLIC // BAND",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "04:43",
+                seconds: 283,
+                director: "MINSUNG KIM",
+                dp: "MATTHEW LIBATIQUE",
+                format: "35MM ANAMORPHIC",
+                synopsis: "강렬한 대비의 빛과 그림자, 폭발적인 사운드의 고조를 교차 편집으로 극대화한 원리퍼블릭의 시그니처 뮤직비디오.",
+                youtubeId: "hT_nvWreIhg",
+                bgTone: "#EFE8DC",
+                primaryAccent: "#FF4D00",
+                secondaryTone: "#D4A373",
+                artPattern: "kinetic_waves"
+            },
+            {
+                id: 5,
+                title: "GOOD LIFE",
+                client: "ONE REPUBLIC // BAND",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "04:12",
+                seconds: 252,
+                director: "MINSUNG KIM",
+                dp: "BRADFORD YOUNG",
+                format: "16MM & SUPER 8 HYBRID",
+                synopsis: "아날로그 필름 프레임과 세계 각지의 눈부신 풍경이 겹쳐지며 삶의 찬란한 순간을 기록한 비주얼 에세이 뮤직비디오.",
+                youtubeId: "jZhQOvvV45w",
+                bgTone: "#F5E6D3",
+                primaryAccent: "#F77F00",
+                secondaryTone: "#BC6C25",
+                artPattern: "sun_prism"
+            },
+            {
+                id: 6,
+                title: "LET'S HURT TONIGHT",
+                client: "ONE REPUBLIC // BAND",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "03:33",
+                seconds: 213,
+                director: "MINSUNG KIM",
+                dp: "ROGER DEAKINS LAB",
+                format: "ARRI ALEXA 35",
+                synopsis: "섬세한 감정선과 서정적인 빛의 흐름이 어우러져 깊은 여운을 남기는 시네마틱 드라마 스타일의 뮤직비디오.",
+                youtubeId: "8wGN7D03Nho",
+                bgTone: "#E8E6E1",
+                primaryAccent: "#FF4D00",
+                secondaryTone: "#8D8A82",
+                artPattern: "architectural_arch"
+            },
+            {
+                id: 7,
+                title: "START AGAIN FT. LOGIC",
+                client: "ONE REPUBLIC // BAND",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "03:02",
+                seconds: 182,
+                director: "MINSUNG KIM",
+                dp: "EMMANUEL LUBEZKI",
+                format: "RED V-RAPTOR XL 8K",
+                synopsis: "도시의 고독과 새로운 시작을 향한 희망을 정교한 카메라 무빙과 감각적인 컬러 그레이딩으로 담아낸 콜라보레이션 필름.",
+                youtubeId: "y-2VKeDBPkw",
+                bgTone: "#EAE7DF",
+                primaryAccent: "#FF4D00",
+                secondaryTone: "#6B705C",
+                artPattern: "horizon_split"
+            },
+            {
+                id: 8,
+                title: "SUNSHINE",
+                client: "ONE REPUBLIC // BAND",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "02:44",
+                seconds: 164,
+                director: "MINSUNG KIM",
+                dp: "CHRISTOPHER PROBST",
+                format: "35MM PANAVISION",
+                synopsis: "따스한 햇살 아래 경쾌한 리듬과 밝은 에너지가 화면 가득 퍼져 나가는 에디토리얼 뮤직비디오.",
+                bgTone: "#F3E5D8",
+                primaryAccent: "#FF4D00",
+                secondaryTone: "#CB997E",
+                artPattern: "kinetic_waves"
+            },
+            {
+                id: 9,
+                title: "SECRETS",
+                client: "ONE REPUBLIC // BAND",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "03:45",
+                seconds: 225,
+                director: "MINSUNG KIM",
+                dp: "DARIUS KHONDJI",
+                format: "ARRI ALEXA 35",
+                synopsis: "현악기의 웅장한 선율과 모던한 건축 공간의 대칭미가 정교하게 맞물리는 퍼포먼스 뮤직비디오.",
+                bgTone: "#E7E5E0",
+                primaryAccent: "#FF4D00",
+                secondaryTone: "#7F7B72",
+                artPattern: "architectural_arch"
+            },
+            {
+                id: 10,
+                title: "APOLOGIZE",
+                client: "ONE REPUBLIC // BAND",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "03:08",
+                seconds: 188,
+                director: "MINSUNG KIM",
+                dp: "CHRISTOPHER PROBST",
+                format: "35MM KODAK 250D",
+                synopsis: "절제된 미니멀리즘 공간 속에서 보컬의 호소력과 앰비언트 조명의 변화를 극대화한 아카이브 필름.",
+                bgTone: "#F4E9DC",
+                primaryAccent: "#FF4D00",
+                secondaryTone: "#E29578",
+                artPattern: "sun_prism"
+            },
+            {
+                id: 11,
+                title: "RESCUE ME",
+                client: "ONE REPUBLIC // BAND",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "02:39",
+                seconds: 159,
+                director: "MINSUNG KIM",
+                dp: "HOYTE VAN HOYTEMA",
+                format: "ARRI ALEXA MINI",
+                synopsis: "역동적인 현대무용과 빠른 템포의 카메라 트래킹이 결합된 강렬한 시각적 내러티브의 뮤직비디오.",
+                bgTone: "#EBE8E1",
+                primaryAccent: "#E85D04",
+                secondaryTone: "#6C757D",
+                artPattern: "horizon_split"
+            },
+            {
+                id: 12,
+                title: "WEST COAST",
+                client: "ONE REPUBLIC // BAND",
+                category: "MUSIC VIDEOS",
+                year: "2026",
+                duration: "03:15",
+                seconds: 195,
+                director: "MINSUNG KIM",
+                dp: "CHRISTOPHER PROBST",
+                format: "65MM ANAMORPHIC",
+                synopsis: "캘리포니아 서부 해안의 황금빛 노을과 빈티지 필름 질감이 어우러진 로드 트립 무드의 뮤직비디오.",
+                bgTone: "#EFECE6",
+                primaryAccent: "#FF4D00",
+                secondaryTone: "#9C6644",
+                artPattern: "kinetic_waves"
+            }
+        ];
+
+        // 전역 상태 변수
+        let currentFilter = 'ALL';
+        let activeProjectIndex = 0;
+        let isPlaying = true;
+        let isMuted = false;
+        let playbackSeconds = 0;
+        let playerAnimFrame = null;
+
+        /**
+         * 1. 밝은 에디토리얼 사진/건축 무드 16:9 썸네일 SVG 생성기
+         */
+        function generateEditorialThumbnailSVG(project, index) {
+            const seed = (index + 1) * 41;
+            const bg = project.bgTone;
+            const accent = project.primaryAccent;
+            const sec = project.secondaryTone;
+
+            let motifMarkup = '';
+            if (project.artPattern === 'architectural_arch') {
+                motifMarkup = `
+                    <rect x="${140 + (seed % 180)}" y="55" width="320" height="395" rx="160" fill="${sec}" opacity="0.28" />
+                    <circle cx="${460 - (seed % 140)}" cy="210" r="88" fill="${accent}" opacity="0.82" />
+                    <line x1="0" y1="315" x2="800" y2="315" stroke="#181816" stroke-width="1" opacity="0.18" />
+                `;
+            } else if (project.artPattern === 'sun_prism') {
+                motifMarkup = `
+                    <circle cx="${260 + (seed % 260)}" cy="195" r="135" fill="${accent}" opacity="0.78" />
+                    <polygon points="0,450 380,140 800,450" fill="${sec}" opacity="0.32" />
+                    <rect x="60" y="70" width="680" height="310" fill="none" stroke="#181816" stroke-width="0.8" opacity="0.15" />
+                `;
+            } else if (project.artPattern === 'horizon_split') {
+                motifMarkup = `
+                    <rect x="0" y="240" width="800" height="210" fill="${sec}" opacity="0.26" />
+                    <circle cx="${520 - (seed % 200)}" cy="240" r="76" fill="${accent}" opacity="0.88" />
+                    <line x1="0" y1="240" x2="800" y2="240" stroke="#181816" stroke-width="1.2" opacity="0.22" />
+                `;
+            } else {
+                motifMarkup = `
+                    <path d="M -50 340 Q 250 ${120 + (seed % 80)} 500 280 T 860 190 L 860 450 L -50 450 Z" fill="${sec}" opacity="0.3" />
+                    <circle cx="${220 + (seed % 320)}" cy="165" r="64" fill="${accent}" opacity="0.85" />
+                    <line x1="${180 + (seed % 200)}" y1="0" x2="${180 + (seed % 200)}" y2="450" stroke="#181816" stroke-width="0.8" opacity="0.14" />
+                `;
+            }
+
+            return `
+                <svg class="thumb-media" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="warm-wash-${project.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FAF9F6" stop-opacity="0.55" />
+                            <stop offset="55%" stop-color="${bg}" stop-opacity="0.9" />
+                            <stop offset="100%" stop-color="${sec}" stop-opacity="0.35" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- 웜 스톤/아이보리 베이스 -->
+                    <rect width="800" height="450" fill="${bg}" />
+                    <rect width="800" height="450" fill="url(#warm-wash-${project.id})" />
+
+                    <!-- 에디토리얼 기하학 아트워크 -->
+                    ${motifMarkup}
+
+                    <!-- 은은한 16:9 뷰파인더 프레임 라인 -->
+                    <path d="M 24 44 L 24 28 L 42 28 M 776 44 L 776 28 L 758 28" stroke="#181816" stroke-width="1.2" fill="none" opacity="0.28" />
+                </svg>
+            `;
+        }
+
+        /**
+         * 2. 타이트 16:9 프로젝트 그리드 렌더링 및 카테고리 필터링
+         */
+        function renderProjectsGrid(category = 'ALL') {
+            const grid = document.getElementById('projects-grid');
+            const filtered = category === 'ALL'
+                ? PROJECTS
+                : PROJECTS.filter(p => p.category === category);
+
+            // 실시간 카운터 업데이트
+            document.getElementById('project-counter').textContent = `${String(filtered.length).padStart(2, '0')} WORKS`;
+
+            // 각 타일 렌더링
+            grid.innerHTML = filtered.map((project) => {
+                const originalIndex = PROJECTS.findIndex(p => p.id === project.id);
+                return `
+                    <article onclick="openTheaterModal(${originalIndex})" class="project-card group rounded-[2px]" aria-label="${project.client} - ${project.title}">
+                        ${generateEditorialThumbnailSVG(project, originalIndex)}
+
+                        <!-- 상단 좌우 미니멀 메타 배지 -->
+                        <div class="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none">
+                            <span class="px-2.5 py-1 rounded-xs bg-ivoryCard/85 backdrop-blur-md border border-hairline font-mono text-[10px] font-semibold tracking-[0.16em] text-charcoal uppercase">
+                                ${project.category}
+                            </span>
+                            <span class="px-2 py-0.5 rounded-xs bg-ivoryCard/85 backdrop-blur-md border border-hairline font-mono text-[10px] tracking-[0.14em] text-mutedSlate">
+                                ${project.youtubeId ? 'YOUTUBE // ' + project.duration : project.duration}
+                            </span>
+                        </div>
+
+                        <!-- 중앙 인터내셔널 오렌지 호버 플레이 버튼 -->
+                        <div class="center-play-pill absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div class="w-12 h-12 rounded-full bg-intlOrange text-ivoryCard flex items-center justify-center shadow-lg">
+                                <svg class="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- 하단 좌측 프로스티드 글래스 타이틀 & 클라이언트 필 -->
+                        <div class="absolute bottom-3.5 left-3.5 right-3.5 flex items-end justify-between gap-2 pointer-events-none">
+                            <div class="px-3.5 py-2 rounded-xs bg-ivoryCard/90 backdrop-blur-md border border-hairline group-hover:border-intlOrange/60 transition-colors max-w-[85%]">
+                                <p class="font-mono text-[10px] font-semibold tracking-[0.18em] text-intlOrange uppercase truncate">
+                                    ${project.client}
+                                </p>
+                                <h3 class="text-sm sm:text-base font-extrabold tracking-[0.05em] uppercase text-charcoal truncate mt-0.5">
+                                    ${project.title}
+                                </h3>
+                            </div>
+
+                            <span class="px-2.5 py-1.5 rounded-xs bg-charcoal text-ivoryCard group-hover:bg-intlOrange transition-colors font-mono text-[10px] font-semibold tracking-[0.16em] uppercase shrink-0">
+                                ${project.year}
+                            </span>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        function filterProjects(category, event) {
+            if (event) event.preventDefault();
+            currentFilter = category;
+
+            // 활성 탭 오렌지 필 스타일 갱신
+            document.querySelectorAll('.filter-tab').forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.classList.add('active', 'bg-intlOrange', 'text-ivoryCard', 'shadow-xs');
+                    btn.classList.remove('text-mutedSlate', 'hover:text-charcoal', 'hover:bg-ivoryCard/70');
+                } else {
+                    btn.classList.remove('active', 'bg-intlOrange', 'text-ivoryCard', 'shadow-xs');
+                    btn.classList.add('text-mutedSlate', 'hover:text-charcoal', 'hover:bg-ivoryCard/70');
+                }
+            });
+
+            renderProjectsGrid(category);
+
+            if (event) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        /**
+         * 3. 라이트 에디토리얼 히어로 캔버스
+         */
+        function initHeroCanvas() {
+            const canvas = document.getElementById('hero-canvas');
+            const ctx = canvas.getContext('2d');
+            let t = 0;
+
+            function resize() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            function drawHero() {
+                t += 0.01;
+                const w = canvas.width;
+                const h = canvas.height;
+
+                ctx.fillStyle = '#EFECE4';
+                ctx.fillRect(0, 0, w, h);
+
+                const sunX = w * 0.68 + Math.sin(t * 0.7) * (w * 0.08);
+                const sunY = h * 0.44 + Math.cos(t * 0.5) * (h * 0.08);
+                const grad = ctx.createRadialGradient(sunX, sunY, 15, sunX, sunY, Math.max(w, h) * 0.55);
+                grad.addColorStop(0, 'rgba(255, 77, 0, 0.34)');
+                grad.addColorStop(0.45, 'rgba(224, 122, 95, 0.18)');
+                grad.addColorStop(1, 'rgba(244, 243, 239, 0)');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+
+                ctx.save();
+                ctx.strokeStyle = 'rgba(24, 24, 22, 0.09)';
+                ctx.lineWidth = 1;
+
+                for (let i = 1; i < 5; i++) {
+                    const gx = (w / 5) * i;
+                    ctx.beginPath();
+                    ctx.moveTo(gx, 0);
+                    ctx.lineTo(gx, h);
+                    ctx.stroke();
+                }
+
+                ctx.fillStyle = 'rgba(255, 77, 0, 0.85)';
+                ctx.beginPath();
+                ctx.arc(sunX, sunY, Math.min(w, h) * 0.14, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = 'rgba(24, 24, 22, 0.22)';
+                ctx.beginPath();
+                ctx.arc(sunX, sunY, Math.min(w, h) * 0.22 + Math.sin(t) * 6, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.fillStyle = 'rgba(24, 24, 22, 0.38)';
+                ctx.font = '500 11px "JetBrains Mono", monospace';
+                ctx.fillText('ANAMORPHIC 2.39:1 // WARM DAYLIGHT GRADE', 24, 30);
+
+                requestAnimationFrame(drawHero);
+            }
+            drawHero();
+        }
+
+        /**
+         * 4. 풀스크린 라이트-에디토리얼 시어터 모달 & 유튜브 연동 플레이어
+         */
+        function openTheaterModal(index) {
+            activeProjectIndex = index;
+            const project = PROJECTS[index];
+            const modal = document.getElementById('theater-modal');
+            const youtubeIframe = document.getElementById('youtube-player');
+            const playerCanvas = document.getElementById('player-canvas');
+            const customControls = document.getElementById('custom-player-controls');
+            const pauseBadge = document.getElementById('player-pause-badge');
+
+            // 메타데이터 & 크레딧 바인딩
+            document.getElementById('modal-category').textContent = project.category;
+            document.getElementById('modal-year').textContent = project.year;
+            document.getElementById('modal-client').textContent = project.client;
+            document.getElementById('modal-title').textContent = project.title;
+            document.getElementById('modal-synopsis').textContent = project.synopsis;
+            document.getElementById('credit-director').textContent = project.director;
+            document.getElementById('credit-client').textContent = project.client;
+            document.getElementById('credit-dp').textContent = project.dp;
+            document.getElementById('credit-format').textContent = project.format;
+            document.getElementById('credit-year').textContent = project.year;
+            document.getElementById('credit-runtime').textContent = project.duration;
+            document.getElementById('duration-display').textContent = formatTimecode(project.seconds);
+            document.getElementById('modal-index-indicator').textContent =
+                `${String(index + 1).padStart(2, '0')} / ${String(PROJECTS.length).padStart(2, '0')}`;
+
+            modal.classList.remove('modal-hidden');
+            modal.classList.add('modal-visible');
+            document.body.style.overflow = 'hidden';
+
+            // 유튜브 ID가 설정된 프로젝트인 경우 유튜브 플레이어 활성화
+            if (project.youtubeId) {
+                if (playerAnimFrame) cancelAnimationFrame(playerAnimFrame);
+                isPlaying = false;
+
+                playerCanvas.classList.add('hidden');
+                customControls.classList.add('hidden');
+                pauseBadge.classList.add('hidden');
+
+                youtubeIframe.classList.remove('hidden');
+                youtubeIframe.src = `https://www.youtube.com/embed/${project.youtubeId}?autoplay=1&rel=0&modestbranding=1`;
+            } else {
+                // 일반 프로젝트는 기존 캔버스 플레이어 활성화
+                youtubeIframe.classList.add('hidden');
+                youtubeIframe.src = '';
+
+                playerCanvas.classList.remove('hidden');
+                customControls.classList.remove('hidden');
+
+                playbackSeconds = 0;
+                isPlaying = true;
+                updatePlayUI();
+                startPlayerVisualizer();
+            }
+        }
+
+        function closeTheaterModal() {
+            const modal = document.getElementById('theater-modal');
+            const youtubeIframe = document.getElementById('youtube-player');
+
+            // 모달 닫을 때 유튜브 재생 중지
+            youtubeIframe.src = '';
+            youtubeIframe.classList.add('hidden');
+
+            modal.classList.remove('modal-visible');
+            modal.classList.add('modal-hidden');
+            document.body.style.overflow = '';
+            isPlaying = false;
+            if (playerAnimFrame) cancelAnimationFrame(playerAnimFrame);
+        }
+
+        function navigateProject(direction) {
+            const nextIndex = (activeProjectIndex + direction + PROJECTS.length) % PROJECTS.length;
+            openTheaterModal(nextIndex);
+        }
+
+        function togglePlayState() {
+            if (PROJECTS[activeProjectIndex].youtubeId) return;
+
+            isPlaying = !isPlaying;
+            updatePlayUI();
+        }
+
+        function updatePlayUI() {
+            const btn = document.getElementById('play-toggle-btn');
+            const badge = document.getElementById('player-pause-badge');
+            btn.textContent = isPlaying ? 'PAUSE' : 'PLAY';
+            if (isPlaying) {
+                badge.classList.add('hidden');
+            } else {
+                badge.classList.remove('hidden');
+            }
+        }
+
+        function toggleMuteState() {
+            isMuted = !isMuted;
+            const btn = document.getElementById('mute-toggle-btn');
+            btn.textContent = isMuted ? 'AUDIO: MUTED' : 'AUDIO: ON';
+            btn.classList.toggle('text-intlOrange', isMuted);
+        }
+
+        function scrubTimeline(event) {
+            const track = document.getElementById('timeline-track');
+            const rect = track.getBoundingClientRect();
+            const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+            const project = PROJECTS[activeProjectIndex];
+            playbackSeconds = ratio * project.seconds;
+        }
+
+        function formatTimecode(totalSeconds) {
+            const hrs = Math.floor(totalSeconds / 3600);
+            const mins = Math.floor((totalSeconds % 3600) / 60);
+            const secs = Math.floor(totalSeconds % 60);
+            const frames = Math.floor((totalSeconds % 1) * 24);
+            return [hrs, mins, secs, frames].map(v => String(v).padStart(2, '0')).join(':');
+        }
+
+        /**
+         * 모달 내 프로젝트 고유 컬러 무드 실시간 캔버스 비주얼라이저
+         */
+        function startPlayerVisualizer() {
+            if (playerAnimFrame) cancelAnimationFrame(playerAnimFrame);
+
+            const canvas = document.getElementById('player-canvas');
+            const ctx = canvas.getContext('2d');
+            let lastTime = performance.now();
+
+            function renderFrame(now) {
+                const delta = (now - lastTime) / 1000;
+                lastTime = now;
+
+                const project = PROJECTS[activeProjectIndex];
+                if (isPlaying) {
+                    playbackSeconds += delta;
+                    if (playbackSeconds >= project.seconds) {
+                        playbackSeconds = 0;
+                    }
+                }
+
+                document.getElementById('timecode-display').textContent = formatTimecode(playbackSeconds);
+                const progressPct = (playbackSeconds / project.seconds) * 100;
+                document.getElementById('timeline-progress').style.width = `${progressPct}%`;
+
+                const w = canvas.width = canvas.clientWidth;
+                const h = canvas.height = canvas.clientHeight;
+                const t = playbackSeconds;
+
+                ctx.fillStyle = project.bgTone;
+                ctx.fillRect(0, 0, w, h);
+
+                const cx = w * (0.5 + Math.cos(t * 0.7) * 0.18);
+                const cy = h * (0.45 + Math.sin(t * 0.5) * 0.12);
+                const grad = ctx.createRadialGradient(cx, cy, 20, w * 0.5, h * 0.5, w * 0.65);
+                grad.addColorStop(0, project.primaryAccent + '55');
+                grad.addColorStop(0.55, project.secondaryTone + '33');
+                grad.addColorStop(1, '#FAF9F6');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+
+                ctx.save();
+                if (project.artPattern === 'kinetic_waves') {
+                    ctx.strokeStyle = project.primaryAccent;
+                    ctx.lineWidth = 2;
+                    for (let i = 0; i < 6; i++) {
+                        ctx.globalAlpha = 0.22 + i * 0.08;
+                        ctx.beginPath();
+                        for (let x = 0; x <= w; x += 24) {
+                            const y = h * 0.48 + Math.sin(x * 0.008 + t * 2.5 + i * 0.6) * (35 + i * 10);
+                            if (x === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        }
+                        ctx.stroke();
+                    }
+                } else if (project.artPattern === 'architectural_arch') {
+                    const archW = Math.min(w * 0.34, 300);
+                    const archH = h * 0.65;
+                    ctx.fillStyle = project.secondaryTone + '44';
+                    ctx.beginPath();
+                    ctx.arc(w * 0.5, h * 0.45, archW * 0.5, Math.PI, 0);
+                    ctx.lineTo(w * 0.5 + archW * 0.5, h * 0.45 + archH * 0.5);
+                    ctx.lineTo(w * 0.5 - archW * 0.5, h * 0.45 + archH * 0.5);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.fillStyle = project.primaryAccent;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, 48 + Math.sin(t * 3) * 6, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = project.primaryAccent;
+                    ctx.globalAlpha = 0.85;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy * 0.9, 54, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    const barCount = 28;
+                    const barW = (w * 0.46) / barCount;
+                    const startX = w * 0.27;
+                    for (let i = 0; i < barCount; i++) {
+                        const amp = isMuted ? 4 : (Math.abs(Math.sin(t * 5 + i * 0.4)) * 36 + 6);
+                        ctx.fillStyle = i % 3 === 0 ? project.primaryAccent : '#181816';
+                        ctx.globalAlpha = 0.28;
+                        ctx.fillRect(startX + i * barW, h * 0.55 - amp / 2, barW - 4, amp);
+                    }
+                }
+                ctx.restore();
+
+                ctx.fillStyle = 'rgba(24, 24, 22, 0.55)';
+                ctx.font = '600 10px "JetBrains Mono", monospace';
+                ctx.fillText(`ARCHIVE SCREENING // ${project.client} — ${project.title}`, 20, 26);
+                ctx.fillText(`TC ${formatTimecode(playbackSeconds)}`, w - 125, 26);
+
+                playerAnimFrame = requestAnimationFrame(renderFrame);
+            }
+
+            playerAnimFrame = requestAnimationFrame(renderFrame);
+        }
+
+        /**
+         * 5. 이메일 원클릭 복사 & 토스트 알림
+         */
+        function copyContactEmail() {
+            const email = 'BOOKING@STUDIOKIM.COM';
+            const tempInput = document.createElement('input');
+            tempInput.value = email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            const toast = document.getElementById('toast-notification');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2600);
+        }
+
+        // 키보드 단축키 (ESC 닫기, 좌우 화살표 이전/다음, 스페이스바 재생/일시정지)
+        document.addEventListener('keydown', (e) => {
+            const theaterModal = document.getElementById('theater-modal');
+            const isTheaterOpen = theaterModal.classList.contains('modal-visible');
+
+            if (e.key === 'Escape' && isTheaterOpen) {
+                closeTheaterModal();
+            } else if (isTheaterOpen) {
+                if (e.key === 'ArrowRight') navigateProject(1);
+                if (e.key === 'ArrowLeft') navigateProject(-1);
+                if (e.key === ' ' && !PROJECTS[activeProjectIndex].youtubeId) {
+                    e.preventDefault();
+                    togglePlayState();
+                }
+            }
+        });
+
+        // 초기 실행
+        window.addEventListener('DOMContentLoaded', () => {
+            renderProjectsGrid('ALL');
+            initHeroCanvas();
+        });
+    </script>
+</body>
+</html>
